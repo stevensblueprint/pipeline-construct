@@ -1,6 +1,6 @@
 {
-  "name": "pipeline-construct",
-  "version": "0.1.1",
+  "name": "@sitblueprint/pipeline-construct",
+  "version": "0.1.2",
   "description": "A reusable AWS CDK construct for building CI/CD pipelines.",
   "author": "Miguel Merlin <mmerlin@stevens.edu>",
   "license": "MIT",
