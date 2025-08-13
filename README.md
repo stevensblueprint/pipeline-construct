@@ -22,7 +22,7 @@ export class MyPipelineStack extends Stack {
 	constructor(scope: Construct, id: string, props?: StackProps) {
 		super(scope, id, props);
 
-		new PipelineConstruct(this, 'MyPipeline', {
+		new Pipeline(this, 'MyPipeline', {
 			// ...your pipeline configuration
 		});
 	}

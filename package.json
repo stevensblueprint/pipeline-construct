@@ -1,6 +1,6 @@
 {
   "name": "pipeline-construct",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A reusable AWS CDK construct for building CI/CD pipelines.",
   "author": "Miguel Merlin <mmerlin@stevens.edu>",
   "license": "MIT",
