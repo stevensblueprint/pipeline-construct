@@ -1,6 +1,21 @@
 {
   "name": "pipeline-construct",
   "version": "0.1.0",
+  "description": "A reusable AWS CDK construct for building CI/CD pipelines.",
+  "author": "Miguel Merlin <mmerlin@stevens.edu>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stevensblueprint/pipeline-construct"
+  },
+  "keywords": [
+    "aws",
+    "cdk",
+    "pipeline",
+    "construct",
+    "ci",
+    "cd"
+  ],
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {

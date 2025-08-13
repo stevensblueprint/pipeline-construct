@@ -1,21 +1,25 @@
-// import * as cdk from 'aws-cdk-lib';
-import { Construct } from 'constructs';
-// import * as sqs from 'aws-cdk-lib/aws-sqs';
+import { Construct } from "constructs";
 
-export interface PipelineConstructProps {
-  // Define construct properties here
+export interface WebhookConfig {
+  /**
+   * Webhook URL
+   */
+  url: string;
 }
 
-export class PipelineConstruct extends Construct {
+export interface PipelineProps {
+  /**
+   * Pipeline name
+   */
+  name: string;
+  /**
+   * Webhook configuration
+   */
+  webhook?: WebhookConfig;
+}
 
-  constructor(scope: Construct, id: string, props: PipelineConstructProps = {}) {
+export class Pipeline extends Construct {
+  constructor(scope: Construct, id: string, props: PipelineProps) {
     super(scope, id);
-
-    // Define construct contents here
-
-    // example resource
-    // const queue = new sqs.Queue(this, 'PipelineConstructQueue', {
-    //   visibilityTimeout: cdk.Duration.seconds(300)
-    // });
   }
 }
