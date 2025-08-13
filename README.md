@@ -1,12 +1,37 @@
-# Welcome to your CDK TypeScript Construct Library project
+# Pipeline CDK Construct
 
-You should explore the contents of this project. It demonstrates a CDK Construct Library that includes a construct (`PipelineConstruct`)
-which contains an Amazon SQS queue that is subscribed to an Amazon SNS topic.
+A reusable AWS CDK construct for building CI/CD pipelines.
 
-The construct defines an interface (`PipelineConstructProps`) to configure the visibility timeout of the queue.
+## Features
+- Easily integrate with AWS CodePipeline
+- Supports multiple stages (source, build, deploy)
+- Webhook integration
 
-## Useful commands
+## Installation
+```bash
+npm install pipeline-construct
+```
 
-* `npm run build`   compile typescript to js
-* `npm run watch`   watch for changes and compile
-* `npm run test`    perform the jest unit tests
+## Usage
+```typescript
+import { PipelineConstruct } from 'pipeline-construct';
+import { Stack, StackProps } from 'aws-cdk-lib';
+import { Construct } from 'constructs';
+
+export class MyPipelineStack extends Stack {
+	constructor(scope: Construct, id: string, props?: StackProps) {
+		super(scope, id, props);
+
+		new PipelineConstruct(this, 'MyPipeline', {
+			// ...your pipeline configuration
+		});
+	}
+}
+```
+
+## Development
+- Build: `npm run build`
+- Test: `npm test`
+
+## License
+MIT
