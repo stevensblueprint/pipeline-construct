@@ -22,6 +22,8 @@
     "build": "tsc",
     "watch": "tsc -w",
     "test": "jest"
+    "format:check": "prettier --check .",
+    "format:write": "prettier --write ."
   },
   "devDependencies": {
     "@types/jest": "^29.5.14",
