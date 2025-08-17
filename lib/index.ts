@@ -39,6 +39,9 @@ export class Pipeline extends Construct {
   private readonly pipeline: codepipeline.Pipeline;
   constructor(scope: Construct, id: string, props: PipelineProps) {
     super(scope, id);
+    if (!props.name) {
+      throw new Error("Pipeline name is required");
+    }
     const stages: codepipeline.StageProps[] = [
       { stageName: "Source", actions: [props.sourceAction] },
       { stageName: "Build", actions: [props.buildAction] },
