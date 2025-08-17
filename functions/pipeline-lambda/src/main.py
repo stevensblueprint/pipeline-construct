@@ -15,7 +15,7 @@ STATE_COLORS = {
     "STOPPING": 0xF39C12,  # orange
 }
 
-DISCORD_WEBHOOKS_URL = "DISCORD_WEBHOOKS_URL"
+WEBHOOKS_URL = "PIPELINE_NAME"
 PIPELINE_NAME = "PIPELINE_NAME"
 
 METHOD = "POST"
@@ -23,7 +23,7 @@ HEADERS = {"Content-Type": "application/json"}
 
 
 def handler(event: Dict, _context: Any) -> Dict[str, Any]:
-    webhook_url = os.getenv(DISCORD_WEBHOOKS_URL)
+    webhook_url = os.getenv(WEBHOOKS_URL)
     pipeline_name = os.getenv(PIPELINE_NAME)
 
     if not webhook_url or not pipeline_name:
