@@ -1,6 +1,6 @@
 {
   "name": "@sitblueprint/pipeline-construct",
-  "version": "0.1.2",
+  "version": "0.1.0",
   "description": "A reusable AWS CDK construct for building CI/CD pipelines.",
   "author": "Miguel Merlin <mmerlin@stevens.edu>",
   "license": "MIT",
@@ -9,8 +9,7 @@
     "url": "https://github.com/stevensblueprint/pipeline-construct"
   },
   "publishConfig": {
-    "access": "public",
-    "registry": "https://registry.npmjs.org/"
+    "access": "public"
   },
   "keywords": [
     "aws",
