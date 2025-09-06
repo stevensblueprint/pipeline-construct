@@ -11,7 +11,7 @@ A reusable [AWS CDK](https://docs.aws.amazon.com/cdk/) construct for creating CI
 ## Installation
 
 ```bash
-npm install pipeline-construct
+npm install @sitblueprint/pipeline-construct
 ```
 
 ## Usage
