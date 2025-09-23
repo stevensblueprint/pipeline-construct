@@ -79,7 +79,7 @@ describe("Pipeline (ViteWebsite) Construct", () => {
 
   const make = (
     id: string,
-    opts?: { webhook?: WebhookConfig; name?: string }
+    opts?: { webhook?: WebhookConfig; name?: string },
   ) =>
     new Pipeline(stack, id, {
       name: opts?.name ?? "TestPipeline",
@@ -126,7 +126,7 @@ describe("Pipeline (ViteWebsite) Construct", () => {
             deploymentType: DeploymentType.ViteWebsite,
             githubConfig,
             vite,
-          })
+          }),
       ).toThrow();
     });
   });
