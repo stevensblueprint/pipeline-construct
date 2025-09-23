@@ -1,10 +1,675 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Pipeline Construct Integration Tests should create valid CloudFormation template 1`] = `
+exports[`Pipeline (ViteWebsite) Construct Creation creates a Vite pipeline without webhook 1`] = `
 {
   "Parameters": "<Parameters elided>",
   "Resources": {
-    "TestBuildProject200EB7F7": {
+    "Cdn9963B1AD": {
+      "Properties": {
+        "DistributionConfig": {
+          "DefaultCacheBehavior": {
+            "CachePolicyId": "658327ea-f89d-4fab-a63d-7e88639e58f6",
+            "Compress": true,
+            "TargetOriginId": "TestStackCdnOrigin192052E26",
+            "ViewerProtocolPolicy": "allow-all",
+          },
+          "Enabled": true,
+          "HttpVersion": "http2",
+          "IPV6Enabled": true,
+          "Origins": [
+            {
+              "DomainName": {
+                "Fn::GetAtt": [
+                  "SiteBucket397A1860",
+                  "RegionalDomainName",
+                ],
+              },
+              "Id": "TestStackCdnOrigin192052E26",
+              "S3OriginConfig": {
+                "OriginAccessIdentity": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "origin-access-identity/cloudfront/",
+                      {
+                        "Ref": "CdnOrigin1S3Origin9BD26264",
+                      },
+                    ],
+                  ],
+                },
+              },
+            },
+          ],
+        },
+      },
+      "Type": "AWS::CloudFront::Distribution",
+    },
+    "CdnOrigin1S3Origin9BD26264": {
+      "Properties": {
+        "CloudFrontOriginAccessIdentityConfig": {
+          "Comment": "Identity for TestStackCdnOrigin192052E26",
+        },
+      },
+      "Type": "AWS::CloudFront::CloudFrontOriginAccessIdentity",
+    },
+    "PViteDeploymentTestPipelinePipelineArtifactsBucketB000E753": {
+      "DeletionPolicy": "Retain",
+      "DependsOn": [
+        "CdnOrigin1S3Origin9BD26264",
+        "Cdn9963B1AD",
+        "SiteBucketPolicy3AC1D0F8",
+        "SiteBucket397A1860",
+      ],
+      "Properties": {
+        "BucketEncryption": {
+          "ServerSideEncryptionConfiguration": [
+            {
+              "ServerSideEncryptionByDefault": {
+                "KMSMasterKeyID": {
+                  "Fn::GetAtt": [
+                    "PViteDeploymentTestPipelinePipelineArtifactsBucketEncryptionKey9C41075A",
+                    "Arn",
+                  ],
+                },
+                "SSEAlgorithm": "aws:kms",
+              },
+            },
+          ],
+        },
+        "PublicAccessBlockConfiguration": {
+          "BlockPublicAcls": true,
+          "BlockPublicPolicy": true,
+          "IgnorePublicAcls": true,
+          "RestrictPublicBuckets": true,
+        },
+      },
+      "Type": "AWS::S3::Bucket",
+      "UpdateReplacePolicy": "Retain",
+    },
+    "PViteDeploymentTestPipelinePipelineArtifactsBucketEncryptionKey9C41075A": {
+      "DeletionPolicy": "Delete",
+      "DependsOn": [
+        "CdnOrigin1S3Origin9BD26264",
+        "Cdn9963B1AD",
+        "SiteBucketPolicy3AC1D0F8",
+        "SiteBucket397A1860",
+      ],
+      "Properties": {
+        "KeyPolicy": {
+          "Statement": [
+            {
+              "Action": "kms:*",
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition",
+                      },
+                      ":iam::",
+                      {
+                        "Ref": "AWS::AccountId",
+                      },
+                      ":root",
+                    ],
+                  ],
+                },
+              },
+              "Resource": "*",
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::KMS::Key",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "PViteDeploymentTestPipelinePipelineArtifactsBucketEncryptionKeyAliasAE3762D9": {
+      "DeletionPolicy": "Delete",
+      "DependsOn": [
+        "CdnOrigin1S3Origin9BD26264",
+        "Cdn9963B1AD",
+        "SiteBucketPolicy3AC1D0F8",
+        "SiteBucket397A1860",
+      ],
+      "Properties": {
+        "AliasName": "alias/codepipeline-teststackpvitedeploymenttestpipelinepipelinedab2526f",
+        "TargetKeyId": {
+          "Fn::GetAtt": [
+            "PViteDeploymentTestPipelinePipelineArtifactsBucketEncryptionKey9C41075A",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::KMS::Alias",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "PViteDeploymentTestPipelinePipelineArtifactsBucketPolicy2DC26FD2": {
+      "DependsOn": [
+        "CdnOrigin1S3Origin9BD26264",
+        "Cdn9963B1AD",
+        "SiteBucketPolicy3AC1D0F8",
+        "SiteBucket397A1860",
+      ],
+      "Properties": {
+        "Bucket": {
+          "Ref": "PViteDeploymentTestPipelinePipelineArtifactsBucketB000E753",
+        },
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "s3:*",
+              "Condition": {
+                "Bool": {
+                  "aws:SecureTransport": "false",
+                },
+              },
+              "Effect": "Deny",
+              "Principal": {
+                "AWS": "*",
+              },
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "PViteDeploymentTestPipelinePipelineArtifactsBucketB000E753",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "PViteDeploymentTestPipelinePipelineArtifactsBucketB000E753",
+                          "Arn",
+                        ],
+                      },
+                      "/*",
+                    ],
+                  ],
+                },
+              ],
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::S3::BucketPolicy",
+    },
+    "PViteDeploymentTestPipelinePipelineBuildViteBuildCodePipelineActionRoleDefaultPolicyC9A86AFF": {
+      "DependsOn": [
+        "CdnOrigin1S3Origin9BD26264",
+        "Cdn9963B1AD",
+        "SiteBucketPolicy3AC1D0F8",
+        "SiteBucket397A1860",
+      ],
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "codebuild:BatchGetBuilds",
+                "codebuild:StartBuild",
+                "codebuild:StopBuild",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "PViteDeploymentViteBuildProject912ED82E",
+                  "Arn",
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "PViteDeploymentTestPipelinePipelineBuildViteBuildCodePipelineActionRoleDefaultPolicyC9A86AFF",
+        "Roles": [
+          {
+            "Ref": "PViteDeploymentTestPipelinePipelineBuildViteBuildCodePipelineActionRoleE07A4A7C",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "PViteDeploymentTestPipelinePipelineBuildViteBuildCodePipelineActionRoleE07A4A7C": {
+      "DependsOn": [
+        "CdnOrigin1S3Origin9BD26264",
+        "Cdn9963B1AD",
+        "SiteBucketPolicy3AC1D0F8",
+        "SiteBucket397A1860",
+      ],
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": {
+                  "Fn::GetAtt": [
+                    "PViteDeploymentTestPipelinePipelineRoleA8237A21",
+                    "Arn",
+                  ],
+                },
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "PViteDeploymentTestPipelinePipelineC2EA5176": {
+      "DependsOn": [
+        "CdnOrigin1S3Origin9BD26264",
+        "Cdn9963B1AD",
+        "PViteDeploymentTestPipelinePipelineRoleDefaultPolicy60AC1984",
+        "PViteDeploymentTestPipelinePipelineRoleA8237A21",
+        "SiteBucketPolicy3AC1D0F8",
+        "SiteBucket397A1860",
+      ],
+      "Properties": {
+        "ArtifactStore": {
+          "EncryptionKey": {
+            "Id": {
+              "Fn::GetAtt": [
+                "PViteDeploymentTestPipelinePipelineArtifactsBucketEncryptionKey9C41075A",
+                "Arn",
+              ],
+            },
+            "Type": "KMS",
+          },
+          "Location": {
+            "Ref": "PViteDeploymentTestPipelinePipelineArtifactsBucketB000E753",
+          },
+          "Type": "S3",
+        },
+        "Name": "TestPipeline",
+        "RestartExecutionOnUpdate": true,
+        "RoleArn": {
+          "Fn::GetAtt": [
+            "PViteDeploymentTestPipelinePipelineRoleA8237A21",
+            "Arn",
+          ],
+        },
+        "Stages": [
+          {
+            "Actions": [
+              {
+                "ActionTypeId": {
+                  "Category": "Source",
+                  "Owner": "ThirdParty",
+                  "Provider": "GitHub",
+                  "Version": "1",
+                },
+                "Configuration": {
+                  "Branch": "main",
+                  "OAuthToken": "{{resolve:secretsmanager:github-token:SecretString:::}}",
+                  "Owner": "test-owner",
+                  "PollForSourceChanges": false,
+                  "Repo": "test-repo",
+                },
+                "Name": "GitHub_Source",
+                "OutputArtifacts": [
+                  {
+                    "Name": "SourceOutput",
+                  },
+                ],
+                "RunOrder": 1,
+              },
+            ],
+            "Name": "Source",
+          },
+          {
+            "Actions": [
+              {
+                "ActionTypeId": {
+                  "Category": "Build",
+                  "Owner": "AWS",
+                  "Provider": "CodeBuild",
+                  "Version": "1",
+                },
+                "Configuration": {
+                  "ProjectName": {
+                    "Ref": "PViteDeploymentViteBuildProject912ED82E",
+                  },
+                },
+                "InputArtifacts": [
+                  {
+                    "Name": "SourceOutput",
+                  },
+                ],
+                "Name": "Vite_Build",
+                "OutputArtifacts": [
+                  {
+                    "Name": "BuildOutput",
+                  },
+                ],
+                "RoleArn": {
+                  "Fn::GetAtt": [
+                    "PViteDeploymentTestPipelinePipelineBuildViteBuildCodePipelineActionRoleE07A4A7C",
+                    "Arn",
+                  ],
+                },
+                "RunOrder": 1,
+              },
+            ],
+            "Name": "Build",
+          },
+          {
+            "Actions": [
+              {
+                "ActionTypeId": {
+                  "Category": "Deploy",
+                  "Owner": "AWS",
+                  "Provider": "S3",
+                  "Version": "1",
+                },
+                "Configuration": {
+                  "BucketName": {
+                    "Ref": "SiteBucket397A1860",
+                  },
+                  "Extract": "true",
+                },
+                "InputArtifacts": [
+                  {
+                    "Name": "BuildOutput",
+                  },
+                ],
+                "Name": "S3_Deploy",
+                "RoleArn": {
+                  "Fn::GetAtt": [
+                    "PViteDeploymentTestPipelinePipelineDeployS3DeployCodePipelineActionRole6457669B",
+                    "Arn",
+                  ],
+                },
+                "RunOrder": 1,
+              },
+            ],
+            "Name": "Deploy",
+          },
+        ],
+      },
+      "Type": "AWS::CodePipeline::Pipeline",
+    },
+    "PViteDeploymentTestPipelinePipelineDeployS3DeployCodePipelineActionRole6457669B": {
+      "DependsOn": [
+        "CdnOrigin1S3Origin9BD26264",
+        "Cdn9963B1AD",
+        "SiteBucketPolicy3AC1D0F8",
+        "SiteBucket397A1860",
+      ],
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": {
+                  "Fn::GetAtt": [
+                    "PViteDeploymentTestPipelinePipelineRoleA8237A21",
+                    "Arn",
+                  ],
+                },
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "PViteDeploymentTestPipelinePipelineDeployS3DeployCodePipelineActionRoleDefaultPolicy9D153682": {
+      "DependsOn": [
+        "CdnOrigin1S3Origin9BD26264",
+        "Cdn9963B1AD",
+        "SiteBucketPolicy3AC1D0F8",
+        "SiteBucket397A1860",
+      ],
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "s3:DeleteObject*",
+                "s3:PutObject",
+                "s3:PutObjectLegalHold",
+                "s3:PutObjectRetention",
+                "s3:PutObjectTagging",
+                "s3:PutObjectVersionTagging",
+                "s3:Abort*",
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "SiteBucket397A1860",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "SiteBucket397A1860",
+                          "Arn",
+                        ],
+                      },
+                      "/*",
+                    ],
+                  ],
+                },
+              ],
+            },
+            {
+              "Action": [
+                "s3:GetObject*",
+                "s3:GetBucket*",
+                "s3:List*",
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "PViteDeploymentTestPipelinePipelineArtifactsBucketB000E753",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "PViteDeploymentTestPipelinePipelineArtifactsBucketB000E753",
+                          "Arn",
+                        ],
+                      },
+                      "/*",
+                    ],
+                  ],
+                },
+              ],
+            },
+            {
+              "Action": [
+                "kms:Decrypt",
+                "kms:DescribeKey",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "PViteDeploymentTestPipelinePipelineArtifactsBucketEncryptionKey9C41075A",
+                  "Arn",
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "PViteDeploymentTestPipelinePipelineDeployS3DeployCodePipelineActionRoleDefaultPolicy9D153682",
+        "Roles": [
+          {
+            "Ref": "PViteDeploymentTestPipelinePipelineDeployS3DeployCodePipelineActionRole6457669B",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "PViteDeploymentTestPipelinePipelineRoleA8237A21": {
+      "DependsOn": [
+        "CdnOrigin1S3Origin9BD26264",
+        "Cdn9963B1AD",
+        "SiteBucketPolicy3AC1D0F8",
+        "SiteBucket397A1860",
+      ],
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "codepipeline.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "PViteDeploymentTestPipelinePipelineRoleDefaultPolicy60AC1984": {
+      "DependsOn": [
+        "CdnOrigin1S3Origin9BD26264",
+        "Cdn9963B1AD",
+        "SiteBucketPolicy3AC1D0F8",
+        "SiteBucket397A1860",
+      ],
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "s3:GetObject*",
+                "s3:GetBucket*",
+                "s3:List*",
+                "s3:DeleteObject*",
+                "s3:PutObject",
+                "s3:PutObjectLegalHold",
+                "s3:PutObjectRetention",
+                "s3:PutObjectTagging",
+                "s3:PutObjectVersionTagging",
+                "s3:Abort*",
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "PViteDeploymentTestPipelinePipelineArtifactsBucketB000E753",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "PViteDeploymentTestPipelinePipelineArtifactsBucketB000E753",
+                          "Arn",
+                        ],
+                      },
+                      "/*",
+                    ],
+                  ],
+                },
+              ],
+            },
+            {
+              "Action": [
+                "kms:Decrypt",
+                "kms:DescribeKey",
+                "kms:Encrypt",
+                "kms:ReEncrypt*",
+                "kms:GenerateDataKey*",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "PViteDeploymentTestPipelinePipelineArtifactsBucketEncryptionKey9C41075A",
+                  "Arn",
+                ],
+              },
+            },
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "PViteDeploymentTestPipelinePipelineBuildViteBuildCodePipelineActionRoleE07A4A7C",
+                  "Arn",
+                ],
+              },
+            },
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "PViteDeploymentTestPipelinePipelineDeployS3DeployCodePipelineActionRole6457669B",
+                  "Arn",
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "PViteDeploymentTestPipelinePipelineRoleDefaultPolicy60AC1984",
+        "Roles": [
+          {
+            "Ref": "PViteDeploymentTestPipelinePipelineRoleA8237A21",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "PViteDeploymentTestPipelinePipelineSourceGitHubSourceWebhookResource488A63CB": {
+      "DependsOn": [
+        "CdnOrigin1S3Origin9BD26264",
+        "Cdn9963B1AD",
+        "SiteBucketPolicy3AC1D0F8",
+        "SiteBucket397A1860",
+      ],
+      "Properties": {
+        "Authentication": "GITHUB_HMAC",
+        "AuthenticationConfiguration": {
+          "SecretToken": "{{resolve:secretsmanager:github-token:SecretString:::}}",
+        },
+        "Filters": [
+          {
+            "JsonPath": "$.ref",
+            "MatchEquals": "refs/heads/{Branch}",
+          },
+        ],
+        "RegisterWithThirdParty": true,
+        "TargetAction": "GitHub_Source",
+        "TargetPipeline": {
+          "Ref": "PViteDeploymentTestPipelinePipelineC2EA5176",
+        },
+        "TargetPipelineVersion": 1,
+      },
+      "Type": "AWS::CodePipeline::Webhook",
+    },
+    "PViteDeploymentViteBuildProject912ED82E": {
       "Properties": {
         "Artifacts": {
           "Type": "NO_ARTIFACTS",
@@ -14,20 +679,27 @@ exports[`Pipeline Construct Integration Tests should create valid CloudFormation
         },
         "EncryptionKey": {
           "Fn::GetAtt": [
-            "TestPipelineArtifactsBucketEncryptionKeyD9CD82AE",
+            "PViteDeploymentTestPipelinePipelineArtifactsBucketEncryptionKey9C41075A",
             "Arn",
           ],
         },
         "Environment": {
           "ComputeType": "BUILD_GENERAL1_SMALL",
-          "Image": "aws/codebuild/standard:7.0",
+          "EnvironmentVariables": [
+            {
+              "Name": "VITE_MODE",
+              "Type": "PLAINTEXT",
+              "Value": "test",
+            },
+          ],
+          "Image": "aws/codebuild/amazonlinux2-x86_64-standard:5.0",
           "ImagePullCredentialsType": "CODEBUILD",
           "PrivilegedMode": false,
           "Type": "LINUX_CONTAINER",
         },
         "ServiceRole": {
           "Fn::GetAtt": [
-            "TestBuildProjectRole189F23AF",
+            "PViteDeploymentViteBuildProjectRole4A6720BB",
             "Arn",
           ],
         },
@@ -35,11 +707,32 @@ exports[`Pipeline Construct Integration Tests should create valid CloudFormation
           "BuildSpec": "{
   "version": "0.2",
   "phases": {
+    "install": {
+      "runtime-versions": {
+        "nodejs": "20"
+      },
+      "commands": [
+        "npm ci"
+      ]
+    },
     "build": {
       "commands": [
-        "echo 'Hello, World!'"
+        "echo \\"Building Vite app...\\"",
+        "npm ci",
+        "npm run build"
       ]
     }
+  },
+  "artifacts": {
+    "base-directory": "dist",
+    "files": [
+      "**/*"
+    ]
+  },
+  "cache": {
+    "paths": [
+      "node_modules/**/*"
+    ]
   }
 }",
           "Type": "NO_SOURCE",
@@ -47,7 +740,7 @@ exports[`Pipeline Construct Integration Tests should create valid CloudFormation
       },
       "Type": "AWS::CodeBuild::Project",
     },
-    "TestBuildProjectRole189F23AF": {
+    "PViteDeploymentViteBuildProjectRole4A6720BB": {
       "Properties": {
         "AssumeRolePolicyDocument": {
           "Statement": [
@@ -64,7 +757,7 @@ exports[`Pipeline Construct Integration Tests should create valid CloudFormation
       },
       "Type": "AWS::IAM::Role",
     },
-    "TestBuildProjectRoleDefaultPolicyF85B9AEB": {
+    "PViteDeploymentViteBuildProjectRoleDefaultPolicy327F99C0": {
       "Properties": {
         "PolicyDocument": {
           "Statement": [
@@ -94,7 +787,7 @@ exports[`Pipeline Construct Integration Tests should create valid CloudFormation
                       },
                       ":log-group:/aws/codebuild/",
                       {
-                        "Ref": "TestBuildProject200EB7F7",
+                        "Ref": "PViteDeploymentViteBuildProject912ED82E",
                       },
                     ],
                   ],
@@ -117,7 +810,7 @@ exports[`Pipeline Construct Integration Tests should create valid CloudFormation
                       },
                       ":log-group:/aws/codebuild/",
                       {
-                        "Ref": "TestBuildProject200EB7F7",
+                        "Ref": "PViteDeploymentViteBuildProject912ED82E",
                       },
                       ":*",
                     ],
@@ -152,12 +845,65 @@ exports[`Pipeline Construct Integration Tests should create valid CloudFormation
                     },
                     ":report-group/",
                     {
-                      "Ref": "TestBuildProject200EB7F7",
+                      "Ref": "PViteDeploymentViteBuildProject912ED82E",
                     },
                     "-*",
                   ],
                 ],
               },
+            },
+            {
+              "Action": "cloudfront:CreateInvalidation",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":cloudfront::",
+                    {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":distribution/",
+                    {
+                      "Ref": "Cdn9963B1AD",
+                    },
+                  ],
+                ],
+              },
+            },
+            {
+              "Action": [
+                "s3:PutObject",
+                "s3:PutObjectAcl",
+                "s3:ListBucket",
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "SiteBucket397A1860",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "SiteBucket397A1860",
+                          "Arn",
+                        ],
+                      },
+                      "/*",
+                    ],
+                  ],
+                },
+              ],
             },
             {
               "Action": [
@@ -176,7 +922,7 @@ exports[`Pipeline Construct Integration Tests should create valid CloudFormation
               "Resource": [
                 {
                   "Fn::GetAtt": [
-                    "TestPipelineArtifactsBucketC6926372",
+                    "PViteDeploymentTestPipelinePipelineArtifactsBucketB000E753",
                     "Arn",
                   ],
                 },
@@ -186,7 +932,7 @@ exports[`Pipeline Construct Integration Tests should create valid CloudFormation
                     [
                       {
                         "Fn::GetAtt": [
-                          "TestPipelineArtifactsBucketC6926372",
+                          "PViteDeploymentTestPipelinePipelineArtifactsBucketB000E753",
                           "Arn",
                         ],
                       },
@@ -207,7 +953,7 @@ exports[`Pipeline Construct Integration Tests should create valid CloudFormation
               "Effect": "Allow",
               "Resource": {
                 "Fn::GetAtt": [
-                  "TestPipelineArtifactsBucketEncryptionKeyD9CD82AE",
+                  "PViteDeploymentTestPipelinePipelineArtifactsBucketEncryptionKey9C41075A",
                   "Arn",
                 ],
               },
@@ -222,7 +968,7 @@ exports[`Pipeline Construct Integration Tests should create valid CloudFormation
               "Effect": "Allow",
               "Resource": {
                 "Fn::GetAtt": [
-                  "TestPipelineArtifactsBucketEncryptionKeyD9CD82AE",
+                  "PViteDeploymentTestPipelinePipelineArtifactsBucketEncryptionKey9C41075A",
                   "Arn",
                 ],
               },
@@ -230,150 +976,150 @@ exports[`Pipeline Construct Integration Tests should create valid CloudFormation
           ],
           "Version": "2012-10-17",
         },
-        "PolicyName": "TestBuildProjectRoleDefaultPolicyF85B9AEB",
+        "PolicyName": "PViteDeploymentViteBuildProjectRoleDefaultPolicy327F99C0",
         "Roles": [
           {
-            "Ref": "TestBuildProjectRole189F23AF",
+            "Ref": "PViteDeploymentViteBuildProjectRole4A6720BB",
           },
         ],
       },
       "Type": "AWS::IAM::Policy",
     },
-    "TestDeployBucket598113DD": {
+    "SiteBucket397A1860": {
       "DeletionPolicy": "Retain",
       "Type": "AWS::S3::Bucket",
       "UpdateReplacePolicy": "Retain",
     },
-    "TestPipeline6B875B6B": {
-      "DependsOn": [
-        "TestPipelineRoleDefaultPolicy5A6143C8",
-        "TestPipelineRole612B87A5",
-      ],
+    "SiteBucketPolicy3AC1D0F8": {
       "Properties": {
-        "ArtifactStore": {
-          "EncryptionKey": {
-            "Id": {
-              "Fn::GetAtt": [
-                "TestPipelineArtifactsBucketEncryptionKeyD9CD82AE",
-                "Arn",
-              ],
-            },
-            "Type": "KMS",
-          },
-          "Location": {
-            "Ref": "TestPipelineArtifactsBucketC6926372",
-          },
-          "Type": "S3",
+        "Bucket": {
+          "Ref": "SiteBucket397A1860",
         },
-        "Name": "TestPipeline",
-        "RoleArn": {
-          "Fn::GetAtt": [
-            "TestPipelineRole612B87A5",
-            "Arn",
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "s3:GetObject",
+              "Effect": "Allow",
+              "Principal": {
+                "CanonicalUser": {
+                  "Fn::GetAtt": [
+                    "CdnOrigin1S3Origin9BD26264",
+                    "S3CanonicalUserId",
+                  ],
+                },
+              },
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    {
+                      "Fn::GetAtt": [
+                        "SiteBucket397A1860",
+                        "Arn",
+                      ],
+                    },
+                    "/*",
+                  ],
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::S3::BucketPolicy",
+    },
+  },
+  "Rules": {
+    "CheckBootstrapVersion": {
+      "Assertions": [
+        {
+          "Assert": {
+            "Fn::Not": [
+              {
+                "Fn::Contains": [
+                  [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5",
+                  ],
+                  {
+                    "Ref": "BootstrapVersion",
+                  },
+                ],
+              },
+            ],
+          },
+          "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI.",
+        },
+      ],
+    },
+  },
+}
+`;
+
+exports[`Pipeline (ViteWebsite) Construct Integration synthesizes a valid template with webhook wiring 1`] = `
+{
+  "Parameters": "<Parameters elided>",
+  "Resources": {
+    "Cdn9963B1AD": {
+      "Properties": {
+        "DistributionConfig": {
+          "DefaultCacheBehavior": {
+            "CachePolicyId": "658327ea-f89d-4fab-a63d-7e88639e58f6",
+            "Compress": true,
+            "TargetOriginId": "TestStackCdnOrigin192052E26",
+            "ViewerProtocolPolicy": "allow-all",
+          },
+          "Enabled": true,
+          "HttpVersion": "http2",
+          "IPV6Enabled": true,
+          "Origins": [
+            {
+              "DomainName": {
+                "Fn::GetAtt": [
+                  "SiteBucket397A1860",
+                  "RegionalDomainName",
+                ],
+              },
+              "Id": "TestStackCdnOrigin192052E26",
+              "S3OriginConfig": {
+                "OriginAccessIdentity": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "origin-access-identity/cloudfront/",
+                      {
+                        "Ref": "CdnOrigin1S3Origin9BD26264",
+                      },
+                    ],
+                  ],
+                },
+              },
+            },
           ],
         },
-        "Stages": [
-          {
-            "Actions": [
-              {
-                "ActionTypeId": {
-                  "Category": "Source",
-                  "Owner": "ThirdParty",
-                  "Provider": "GitHub",
-                  "Version": "1",
-                },
-                "Configuration": {
-                  "Branch": "master",
-                  "OAuthToken": "{{resolve:secretsmanager:github-token:SecretString:::}}",
-                  "Owner": "test-owner",
-                  "PollForSourceChanges": false,
-                  "Repo": "test-repo",
-                },
-                "Name": "Source",
-                "OutputArtifacts": [
-                  {
-                    "Name": "SourceOutput",
-                  },
-                ],
-                "RunOrder": 1,
-              },
-            ],
-            "Name": "Source",
-          },
-          {
-            "Actions": [
-              {
-                "ActionTypeId": {
-                  "Category": "Build",
-                  "Owner": "AWS",
-                  "Provider": "CodeBuild",
-                  "Version": "1",
-                },
-                "Configuration": {
-                  "ProjectName": {
-                    "Ref": "TestBuildProject200EB7F7",
-                  },
-                },
-                "InputArtifacts": [
-                  {
-                    "Name": "SourceOutput",
-                  },
-                ],
-                "Name": "Build",
-                "OutputArtifacts": [
-                  {
-                    "Name": "BuildOutput",
-                  },
-                ],
-                "RoleArn": {
-                  "Fn::GetAtt": [
-                    "TestPipelineBuildCodePipelineActionRoleAA8222B3",
-                    "Arn",
-                  ],
-                },
-                "RunOrder": 1,
-              },
-            ],
-            "Name": "Build",
-          },
-          {
-            "Actions": [
-              {
-                "ActionTypeId": {
-                  "Category": "Deploy",
-                  "Owner": "AWS",
-                  "Provider": "S3",
-                  "Version": "1",
-                },
-                "Configuration": {
-                  "BucketName": {
-                    "Ref": "TestDeployBucket598113DD",
-                  },
-                  "Extract": "true",
-                },
-                "InputArtifacts": [
-                  {
-                    "Name": "BuildOutput",
-                  },
-                ],
-                "Name": "Deploy",
-                "RoleArn": {
-                  "Fn::GetAtt": [
-                    "TestPipelineDeployCodePipelineActionRole165722EB",
-                    "Arn",
-                  ],
-                },
-                "RunOrder": 1,
-              },
-            ],
-            "Name": "Deploy",
-          },
-        ],
       },
-      "Type": "AWS::CodePipeline::Pipeline",
+      "Type": "AWS::CloudFront::Distribution",
     },
-    "TestPipelineArtifactsBucketC6926372": {
+    "CdnOrigin1S3Origin9BD26264": {
+      "Properties": {
+        "CloudFrontOriginAccessIdentityConfig": {
+          "Comment": "Identity for TestStackCdnOrigin192052E26",
+        },
+      },
+      "Type": "AWS::CloudFront::CloudFrontOriginAccessIdentity",
+    },
+    "PViteDeploymentTestPipelinePipelineArtifactsBucketB000E753": {
       "DeletionPolicy": "Retain",
+      "DependsOn": [
+        "CdnOrigin1S3Origin9BD26264",
+        "Cdn9963B1AD",
+        "SiteBucketPolicy3AC1D0F8",
+        "SiteBucket397A1860",
+      ],
       "Properties": {
         "BucketEncryption": {
           "ServerSideEncryptionConfiguration": [
@@ -381,7 +1127,7 @@ exports[`Pipeline Construct Integration Tests should create valid CloudFormation
               "ServerSideEncryptionByDefault": {
                 "KMSMasterKeyID": {
                   "Fn::GetAtt": [
-                    "TestPipelineArtifactsBucketEncryptionKeyD9CD82AE",
+                    "PViteDeploymentTestPipelinePipelineArtifactsBucketEncryptionKey9C41075A",
                     "Arn",
                   ],
                 },
@@ -400,22 +1146,14 @@ exports[`Pipeline Construct Integration Tests should create valid CloudFormation
       "Type": "AWS::S3::Bucket",
       "UpdateReplacePolicy": "Retain",
     },
-    "TestPipelineArtifactsBucketEncryptionKeyAlias45F030EF": {
+    "PViteDeploymentTestPipelinePipelineArtifactsBucketEncryptionKey9C41075A": {
       "DeletionPolicy": "Delete",
-      "Properties": {
-        "AliasName": "alias/codepipeline-teststacktestpipeline9e1085fc",
-        "TargetKeyId": {
-          "Fn::GetAtt": [
-            "TestPipelineArtifactsBucketEncryptionKeyD9CD82AE",
-            "Arn",
-          ],
-        },
-      },
-      "Type": "AWS::KMS::Alias",
-      "UpdateReplacePolicy": "Delete",
-    },
-    "TestPipelineArtifactsBucketEncryptionKeyD9CD82AE": {
-      "DeletionPolicy": "Delete",
+      "DependsOn": [
+        "CdnOrigin1S3Origin9BD26264",
+        "Cdn9963B1AD",
+        "SiteBucketPolicy3AC1D0F8",
+        "SiteBucket397A1860",
+      ],
       "Properties": {
         "KeyPolicy": {
           "Statement": [
@@ -449,10 +1187,36 @@ exports[`Pipeline Construct Integration Tests should create valid CloudFormation
       "Type": "AWS::KMS::Key",
       "UpdateReplacePolicy": "Delete",
     },
-    "TestPipelineArtifactsBucketPolicy8C7094B2": {
+    "PViteDeploymentTestPipelinePipelineArtifactsBucketEncryptionKeyAliasAE3762D9": {
+      "DeletionPolicy": "Delete",
+      "DependsOn": [
+        "CdnOrigin1S3Origin9BD26264",
+        "Cdn9963B1AD",
+        "SiteBucketPolicy3AC1D0F8",
+        "SiteBucket397A1860",
+      ],
+      "Properties": {
+        "AliasName": "alias/codepipeline-teststackpvitedeploymenttestpipelinepipelinedab2526f",
+        "TargetKeyId": {
+          "Fn::GetAtt": [
+            "PViteDeploymentTestPipelinePipelineArtifactsBucketEncryptionKey9C41075A",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::KMS::Alias",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "PViteDeploymentTestPipelinePipelineArtifactsBucketPolicy2DC26FD2": {
+      "DependsOn": [
+        "CdnOrigin1S3Origin9BD26264",
+        "Cdn9963B1AD",
+        "SiteBucketPolicy3AC1D0F8",
+        "SiteBucket397A1860",
+      ],
       "Properties": {
         "Bucket": {
-          "Ref": "TestPipelineArtifactsBucketC6926372",
+          "Ref": "PViteDeploymentTestPipelinePipelineArtifactsBucketB000E753",
         },
         "PolicyDocument": {
           "Statement": [
@@ -470,7 +1234,7 @@ exports[`Pipeline Construct Integration Tests should create valid CloudFormation
               "Resource": [
                 {
                   "Fn::GetAtt": [
-                    "TestPipelineArtifactsBucketC6926372",
+                    "PViteDeploymentTestPipelinePipelineArtifactsBucketB000E753",
                     "Arn",
                   ],
                 },
@@ -480,7 +1244,7 @@ exports[`Pipeline Construct Integration Tests should create valid CloudFormation
                     [
                       {
                         "Fn::GetAtt": [
-                          "TestPipelineArtifactsBucketC6926372",
+                          "PViteDeploymentTestPipelinePipelineArtifactsBucketB000E753",
                           "Arn",
                         ],
                       },
@@ -496,29 +1260,13 @@ exports[`Pipeline Construct Integration Tests should create valid CloudFormation
       },
       "Type": "AWS::S3::BucketPolicy",
     },
-    "TestPipelineBuildCodePipelineActionRoleAA8222B3": {
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Statement": [
-            {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Principal": {
-                "AWS": {
-                  "Fn::GetAtt": [
-                    "TestPipelineRole612B87A5",
-                    "Arn",
-                  ],
-                },
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-      },
-      "Type": "AWS::IAM::Role",
-    },
-    "TestPipelineBuildCodePipelineActionRoleDefaultPolicy4A09011F": {
+    "PViteDeploymentTestPipelinePipelineBuildViteBuildCodePipelineActionRoleDefaultPolicyC9A86AFF": {
+      "DependsOn": [
+        "CdnOrigin1S3Origin9BD26264",
+        "Cdn9963B1AD",
+        "SiteBucketPolicy3AC1D0F8",
+        "SiteBucket397A1860",
+      ],
       "Properties": {
         "PolicyDocument": {
           "Statement": [
@@ -531,7 +1279,7 @@ exports[`Pipeline Construct Integration Tests should create valid CloudFormation
               "Effect": "Allow",
               "Resource": {
                 "Fn::GetAtt": [
-                  "TestBuildProject200EB7F7",
+                  "PViteDeploymentViteBuildProject912ED82E",
                   "Arn",
                 ],
               },
@@ -539,16 +1287,22 @@ exports[`Pipeline Construct Integration Tests should create valid CloudFormation
           ],
           "Version": "2012-10-17",
         },
-        "PolicyName": "TestPipelineBuildCodePipelineActionRoleDefaultPolicy4A09011F",
+        "PolicyName": "PViteDeploymentTestPipelinePipelineBuildViteBuildCodePipelineActionRoleDefaultPolicyC9A86AFF",
         "Roles": [
           {
-            "Ref": "TestPipelineBuildCodePipelineActionRoleAA8222B3",
+            "Ref": "PViteDeploymentTestPipelinePipelineBuildViteBuildCodePipelineActionRoleE07A4A7C",
           },
         ],
       },
       "Type": "AWS::IAM::Policy",
     },
-    "TestPipelineDeployCodePipelineActionRole165722EB": {
+    "PViteDeploymentTestPipelinePipelineBuildViteBuildCodePipelineActionRoleE07A4A7C": {
+      "DependsOn": [
+        "CdnOrigin1S3Origin9BD26264",
+        "Cdn9963B1AD",
+        "SiteBucketPolicy3AC1D0F8",
+        "SiteBucket397A1860",
+      ],
       "Properties": {
         "AssumeRolePolicyDocument": {
           "Statement": [
@@ -558,7 +1312,7 @@ exports[`Pipeline Construct Integration Tests should create valid CloudFormation
               "Principal": {
                 "AWS": {
                   "Fn::GetAtt": [
-                    "TestPipelineRole612B87A5",
+                    "PViteDeploymentTestPipelinePipelineRoleA8237A21",
                     "Arn",
                   ],
                 },
@@ -570,7 +1324,174 @@ exports[`Pipeline Construct Integration Tests should create valid CloudFormation
       },
       "Type": "AWS::IAM::Role",
     },
-    "TestPipelineDeployCodePipelineActionRoleDefaultPolicy06E232B6": {
+    "PViteDeploymentTestPipelinePipelineC2EA5176": {
+      "DependsOn": [
+        "CdnOrigin1S3Origin9BD26264",
+        "Cdn9963B1AD",
+        "PViteDeploymentTestPipelinePipelineRoleDefaultPolicy60AC1984",
+        "PViteDeploymentTestPipelinePipelineRoleA8237A21",
+        "SiteBucketPolicy3AC1D0F8",
+        "SiteBucket397A1860",
+      ],
+      "Properties": {
+        "ArtifactStore": {
+          "EncryptionKey": {
+            "Id": {
+              "Fn::GetAtt": [
+                "PViteDeploymentTestPipelinePipelineArtifactsBucketEncryptionKey9C41075A",
+                "Arn",
+              ],
+            },
+            "Type": "KMS",
+          },
+          "Location": {
+            "Ref": "PViteDeploymentTestPipelinePipelineArtifactsBucketB000E753",
+          },
+          "Type": "S3",
+        },
+        "Name": "TestPipeline",
+        "RestartExecutionOnUpdate": true,
+        "RoleArn": {
+          "Fn::GetAtt": [
+            "PViteDeploymentTestPipelinePipelineRoleA8237A21",
+            "Arn",
+          ],
+        },
+        "Stages": [
+          {
+            "Actions": [
+              {
+                "ActionTypeId": {
+                  "Category": "Source",
+                  "Owner": "ThirdParty",
+                  "Provider": "GitHub",
+                  "Version": "1",
+                },
+                "Configuration": {
+                  "Branch": "main",
+                  "OAuthToken": "{{resolve:secretsmanager:github-token:SecretString:::}}",
+                  "Owner": "test-owner",
+                  "PollForSourceChanges": false,
+                  "Repo": "test-repo",
+                },
+                "Name": "GitHub_Source",
+                "OutputArtifacts": [
+                  {
+                    "Name": "SourceOutput",
+                  },
+                ],
+                "RunOrder": 1,
+              },
+            ],
+            "Name": "Source",
+          },
+          {
+            "Actions": [
+              {
+                "ActionTypeId": {
+                  "Category": "Build",
+                  "Owner": "AWS",
+                  "Provider": "CodeBuild",
+                  "Version": "1",
+                },
+                "Configuration": {
+                  "ProjectName": {
+                    "Ref": "PViteDeploymentViteBuildProject912ED82E",
+                  },
+                },
+                "InputArtifacts": [
+                  {
+                    "Name": "SourceOutput",
+                  },
+                ],
+                "Name": "Vite_Build",
+                "OutputArtifacts": [
+                  {
+                    "Name": "BuildOutput",
+                  },
+                ],
+                "RoleArn": {
+                  "Fn::GetAtt": [
+                    "PViteDeploymentTestPipelinePipelineBuildViteBuildCodePipelineActionRoleE07A4A7C",
+                    "Arn",
+                  ],
+                },
+                "RunOrder": 1,
+              },
+            ],
+            "Name": "Build",
+          },
+          {
+            "Actions": [
+              {
+                "ActionTypeId": {
+                  "Category": "Deploy",
+                  "Owner": "AWS",
+                  "Provider": "S3",
+                  "Version": "1",
+                },
+                "Configuration": {
+                  "BucketName": {
+                    "Ref": "SiteBucket397A1860",
+                  },
+                  "Extract": "true",
+                },
+                "InputArtifacts": [
+                  {
+                    "Name": "BuildOutput",
+                  },
+                ],
+                "Name": "S3_Deploy",
+                "RoleArn": {
+                  "Fn::GetAtt": [
+                    "PViteDeploymentTestPipelinePipelineDeployS3DeployCodePipelineActionRole6457669B",
+                    "Arn",
+                  ],
+                },
+                "RunOrder": 1,
+              },
+            ],
+            "Name": "Deploy",
+          },
+        ],
+      },
+      "Type": "AWS::CodePipeline::Pipeline",
+    },
+    "PViteDeploymentTestPipelinePipelineDeployS3DeployCodePipelineActionRole6457669B": {
+      "DependsOn": [
+        "CdnOrigin1S3Origin9BD26264",
+        "Cdn9963B1AD",
+        "SiteBucketPolicy3AC1D0F8",
+        "SiteBucket397A1860",
+      ],
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": {
+                  "Fn::GetAtt": [
+                    "PViteDeploymentTestPipelinePipelineRoleA8237A21",
+                    "Arn",
+                  ],
+                },
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "PViteDeploymentTestPipelinePipelineDeployS3DeployCodePipelineActionRoleDefaultPolicy9D153682": {
+      "DependsOn": [
+        "CdnOrigin1S3Origin9BD26264",
+        "Cdn9963B1AD",
+        "SiteBucketPolicy3AC1D0F8",
+        "SiteBucket397A1860",
+      ],
       "Properties": {
         "PolicyDocument": {
           "Statement": [
@@ -588,7 +1509,7 @@ exports[`Pipeline Construct Integration Tests should create valid CloudFormation
               "Resource": [
                 {
                   "Fn::GetAtt": [
-                    "TestDeployBucket598113DD",
+                    "SiteBucket397A1860",
                     "Arn",
                   ],
                 },
@@ -598,7 +1519,7 @@ exports[`Pipeline Construct Integration Tests should create valid CloudFormation
                     [
                       {
                         "Fn::GetAtt": [
-                          "TestDeployBucket598113DD",
+                          "SiteBucket397A1860",
                           "Arn",
                         ],
                       },
@@ -618,7 +1539,7 @@ exports[`Pipeline Construct Integration Tests should create valid CloudFormation
               "Resource": [
                 {
                   "Fn::GetAtt": [
-                    "TestPipelineArtifactsBucketC6926372",
+                    "PViteDeploymentTestPipelinePipelineArtifactsBucketB000E753",
                     "Arn",
                   ],
                 },
@@ -628,7 +1549,7 @@ exports[`Pipeline Construct Integration Tests should create valid CloudFormation
                     [
                       {
                         "Fn::GetAtt": [
-                          "TestPipelineArtifactsBucketC6926372",
+                          "PViteDeploymentTestPipelinePipelineArtifactsBucketB000E753",
                           "Arn",
                         ],
                       },
@@ -646,7 +1567,7 @@ exports[`Pipeline Construct Integration Tests should create valid CloudFormation
               "Effect": "Allow",
               "Resource": {
                 "Fn::GetAtt": [
-                  "TestPipelineArtifactsBucketEncryptionKeyD9CD82AE",
+                  "PViteDeploymentTestPipelinePipelineArtifactsBucketEncryptionKey9C41075A",
                   "Arn",
                 ],
               },
@@ -654,16 +1575,22 @@ exports[`Pipeline Construct Integration Tests should create valid CloudFormation
           ],
           "Version": "2012-10-17",
         },
-        "PolicyName": "TestPipelineDeployCodePipelineActionRoleDefaultPolicy06E232B6",
+        "PolicyName": "PViteDeploymentTestPipelinePipelineDeployS3DeployCodePipelineActionRoleDefaultPolicy9D153682",
         "Roles": [
           {
-            "Ref": "TestPipelineDeployCodePipelineActionRole165722EB",
+            "Ref": "PViteDeploymentTestPipelinePipelineDeployS3DeployCodePipelineActionRole6457669B",
           },
         ],
       },
       "Type": "AWS::IAM::Policy",
     },
-    "TestPipelinePipelineStateChange2F9CF929": {
+    "PViteDeploymentTestPipelinePipelinePipelineStateChange10B0C628": {
+      "DependsOn": [
+        "CdnOrigin1S3Origin9BD26264",
+        "Cdn9963B1AD",
+        "SiteBucketPolicy3AC1D0F8",
+        "SiteBucket397A1860",
+      ],
       "Properties": {
         "Description": "Lambda function to handle pipeline state changes",
         "EventPattern": {
@@ -689,7 +1616,7 @@ exports[`Pipeline Construct Integration Tests should create valid CloudFormation
                   },
                   ":",
                   {
-                    "Ref": "TestPipeline6B875B6B",
+                    "Ref": "PViteDeploymentTestPipelinePipelineC2EA5176",
                   },
                 ],
               ],
@@ -704,7 +1631,7 @@ exports[`Pipeline Construct Integration Tests should create valid CloudFormation
           {
             "Arn": {
               "Fn::GetAtt": [
-                "TestPipelineWebhookHandler3547E834",
+                "PWebhookHandlerB6C7E847",
                 "Arn",
               ],
             },
@@ -714,26 +1641,38 @@ exports[`Pipeline Construct Integration Tests should create valid CloudFormation
       },
       "Type": "AWS::Events::Rule",
     },
-    "TestPipelinePipelineStateChangeAllowEventRuleTestStackTestPipelineWebhookHandler4223326E60294815": {
+    "PViteDeploymentTestPipelinePipelinePipelineStateChangeAllowEventRuleTestStackPWebhookHandler8BF6E7CC431512DC": {
+      "DependsOn": [
+        "CdnOrigin1S3Origin9BD26264",
+        "Cdn9963B1AD",
+        "SiteBucketPolicy3AC1D0F8",
+        "SiteBucket397A1860",
+      ],
       "Properties": {
         "Action": "lambda:InvokeFunction",
         "FunctionName": {
           "Fn::GetAtt": [
-            "TestPipelineWebhookHandler3547E834",
+            "PWebhookHandlerB6C7E847",
             "Arn",
           ],
         },
         "Principal": "events.amazonaws.com",
         "SourceArn": {
           "Fn::GetAtt": [
-            "TestPipelinePipelineStateChange2F9CF929",
+            "PViteDeploymentTestPipelinePipelinePipelineStateChange10B0C628",
             "Arn",
           ],
         },
       },
       "Type": "AWS::Lambda::Permission",
     },
-    "TestPipelineRole612B87A5": {
+    "PViteDeploymentTestPipelinePipelineRoleA8237A21": {
+      "DependsOn": [
+        "CdnOrigin1S3Origin9BD26264",
+        "Cdn9963B1AD",
+        "SiteBucketPolicy3AC1D0F8",
+        "SiteBucket397A1860",
+      ],
       "Properties": {
         "AssumeRolePolicyDocument": {
           "Statement": [
@@ -750,7 +1689,13 @@ exports[`Pipeline Construct Integration Tests should create valid CloudFormation
       },
       "Type": "AWS::IAM::Role",
     },
-    "TestPipelineRoleDefaultPolicy5A6143C8": {
+    "PViteDeploymentTestPipelinePipelineRoleDefaultPolicy60AC1984": {
+      "DependsOn": [
+        "CdnOrigin1S3Origin9BD26264",
+        "Cdn9963B1AD",
+        "SiteBucketPolicy3AC1D0F8",
+        "SiteBucket397A1860",
+      ],
       "Properties": {
         "PolicyDocument": {
           "Statement": [
@@ -771,7 +1716,7 @@ exports[`Pipeline Construct Integration Tests should create valid CloudFormation
               "Resource": [
                 {
                   "Fn::GetAtt": [
-                    "TestPipelineArtifactsBucketC6926372",
+                    "PViteDeploymentTestPipelinePipelineArtifactsBucketB000E753",
                     "Arn",
                   ],
                 },
@@ -781,7 +1726,7 @@ exports[`Pipeline Construct Integration Tests should create valid CloudFormation
                     [
                       {
                         "Fn::GetAtt": [
-                          "TestPipelineArtifactsBucketC6926372",
+                          "PViteDeploymentTestPipelinePipelineArtifactsBucketB000E753",
                           "Arn",
                         ],
                       },
@@ -802,7 +1747,7 @@ exports[`Pipeline Construct Integration Tests should create valid CloudFormation
               "Effect": "Allow",
               "Resource": {
                 "Fn::GetAtt": [
-                  "TestPipelineArtifactsBucketEncryptionKeyD9CD82AE",
+                  "PViteDeploymentTestPipelinePipelineArtifactsBucketEncryptionKey9C41075A",
                   "Arn",
                 ],
               },
@@ -812,7 +1757,7 @@ exports[`Pipeline Construct Integration Tests should create valid CloudFormation
               "Effect": "Allow",
               "Resource": {
                 "Fn::GetAtt": [
-                  "TestPipelineBuildCodePipelineActionRoleAA8222B3",
+                  "PViteDeploymentTestPipelinePipelineBuildViteBuildCodePipelineActionRoleE07A4A7C",
                   "Arn",
                 ],
               },
@@ -822,7 +1767,7 @@ exports[`Pipeline Construct Integration Tests should create valid CloudFormation
               "Effect": "Allow",
               "Resource": {
                 "Fn::GetAtt": [
-                  "TestPipelineDeployCodePipelineActionRole165722EB",
+                  "PViteDeploymentTestPipelinePipelineDeployS3DeployCodePipelineActionRole6457669B",
                   "Arn",
                 ],
               },
@@ -830,16 +1775,22 @@ exports[`Pipeline Construct Integration Tests should create valid CloudFormation
           ],
           "Version": "2012-10-17",
         },
-        "PolicyName": "TestPipelineRoleDefaultPolicy5A6143C8",
+        "PolicyName": "PViteDeploymentTestPipelinePipelineRoleDefaultPolicy60AC1984",
         "Roles": [
           {
-            "Ref": "TestPipelineRole612B87A5",
+            "Ref": "PViteDeploymentTestPipelinePipelineRoleA8237A21",
           },
         ],
       },
       "Type": "AWS::IAM::Policy",
     },
-    "TestPipelineSourceWebhookResource00005D08": {
+    "PViteDeploymentTestPipelinePipelineSourceGitHubSourceWebhookResource488A63CB": {
+      "DependsOn": [
+        "CdnOrigin1S3Origin9BD26264",
+        "Cdn9963B1AD",
+        "SiteBucketPolicy3AC1D0F8",
+        "SiteBucket397A1860",
+      ],
       "Properties": {
         "Authentication": "GITHUB_HMAC",
         "AuthenticationConfiguration": {
@@ -852,17 +1803,333 @@ exports[`Pipeline Construct Integration Tests should create valid CloudFormation
           },
         ],
         "RegisterWithThirdParty": true,
-        "TargetAction": "Source",
+        "TargetAction": "GitHub_Source",
         "TargetPipeline": {
-          "Ref": "TestPipeline6B875B6B",
+          "Ref": "PViteDeploymentTestPipelinePipelineC2EA5176",
         },
         "TargetPipelineVersion": 1,
       },
       "Type": "AWS::CodePipeline::Webhook",
     },
-    "TestPipelineWebhookHandler3547E834": {
+    "PViteDeploymentViteBuildProject912ED82E": {
+      "Properties": {
+        "Artifacts": {
+          "Type": "NO_ARTIFACTS",
+        },
+        "Cache": {
+          "Type": "NO_CACHE",
+        },
+        "EncryptionKey": {
+          "Fn::GetAtt": [
+            "PViteDeploymentTestPipelinePipelineArtifactsBucketEncryptionKey9C41075A",
+            "Arn",
+          ],
+        },
+        "Environment": {
+          "ComputeType": "BUILD_GENERAL1_SMALL",
+          "EnvironmentVariables": [
+            {
+              "Name": "VITE_MODE",
+              "Type": "PLAINTEXT",
+              "Value": "test",
+            },
+          ],
+          "Image": "aws/codebuild/amazonlinux2-x86_64-standard:5.0",
+          "ImagePullCredentialsType": "CODEBUILD",
+          "PrivilegedMode": false,
+          "Type": "LINUX_CONTAINER",
+        },
+        "ServiceRole": {
+          "Fn::GetAtt": [
+            "PViteDeploymentViteBuildProjectRole4A6720BB",
+            "Arn",
+          ],
+        },
+        "Source": {
+          "BuildSpec": "{
+  "version": "0.2",
+  "phases": {
+    "install": {
+      "runtime-versions": {
+        "nodejs": "20"
+      },
+      "commands": [
+        "npm ci"
+      ]
+    },
+    "build": {
+      "commands": [
+        "echo \\"Building Vite app...\\"",
+        "npm ci",
+        "npm run build"
+      ]
+    }
+  },
+  "artifacts": {
+    "base-directory": "dist",
+    "files": [
+      "**/*"
+    ]
+  },
+  "cache": {
+    "paths": [
+      "node_modules/**/*"
+    ]
+  }
+}",
+          "Type": "NO_SOURCE",
+        },
+      },
+      "Type": "AWS::CodeBuild::Project",
+    },
+    "PViteDeploymentViteBuildProjectRole4A6720BB": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "codebuild.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "PViteDeploymentViteBuildProjectRoleDefaultPolicy327F99C0": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents",
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition",
+                      },
+                      ":logs:",
+                      {
+                        "Ref": "AWS::Region",
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId",
+                      },
+                      ":log-group:/aws/codebuild/",
+                      {
+                        "Ref": "PViteDeploymentViteBuildProject912ED82E",
+                      },
+                    ],
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition",
+                      },
+                      ":logs:",
+                      {
+                        "Ref": "AWS::Region",
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId",
+                      },
+                      ":log-group:/aws/codebuild/",
+                      {
+                        "Ref": "PViteDeploymentViteBuildProject912ED82E",
+                      },
+                      ":*",
+                    ],
+                  ],
+                },
+              ],
+            },
+            {
+              "Action": [
+                "codebuild:CreateReportGroup",
+                "codebuild:CreateReport",
+                "codebuild:UpdateReport",
+                "codebuild:BatchPutTestCases",
+                "codebuild:BatchPutCodeCoverages",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":codebuild:",
+                    {
+                      "Ref": "AWS::Region",
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":report-group/",
+                    {
+                      "Ref": "PViteDeploymentViteBuildProject912ED82E",
+                    },
+                    "-*",
+                  ],
+                ],
+              },
+            },
+            {
+              "Action": "cloudfront:CreateInvalidation",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":cloudfront::",
+                    {
+                      "Ref": "AWS::AccountId",
+                    },
+                    ":distribution/",
+                    {
+                      "Ref": "Cdn9963B1AD",
+                    },
+                  ],
+                ],
+              },
+            },
+            {
+              "Action": [
+                "s3:PutObject",
+                "s3:PutObjectAcl",
+                "s3:ListBucket",
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "SiteBucket397A1860",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "SiteBucket397A1860",
+                          "Arn",
+                        ],
+                      },
+                      "/*",
+                    ],
+                  ],
+                },
+              ],
+            },
+            {
+              "Action": [
+                "s3:GetObject*",
+                "s3:GetBucket*",
+                "s3:List*",
+                "s3:DeleteObject*",
+                "s3:PutObject",
+                "s3:PutObjectLegalHold",
+                "s3:PutObjectRetention",
+                "s3:PutObjectTagging",
+                "s3:PutObjectVersionTagging",
+                "s3:Abort*",
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "PViteDeploymentTestPipelinePipelineArtifactsBucketB000E753",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "PViteDeploymentTestPipelinePipelineArtifactsBucketB000E753",
+                          "Arn",
+                        ],
+                      },
+                      "/*",
+                    ],
+                  ],
+                },
+              ],
+            },
+            {
+              "Action": [
+                "kms:Decrypt",
+                "kms:DescribeKey",
+                "kms:Encrypt",
+                "kms:ReEncrypt*",
+                "kms:GenerateDataKey*",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "PViteDeploymentTestPipelinePipelineArtifactsBucketEncryptionKey9C41075A",
+                  "Arn",
+                ],
+              },
+            },
+            {
+              "Action": [
+                "kms:Decrypt",
+                "kms:Encrypt",
+                "kms:ReEncrypt*",
+                "kms:GenerateDataKey*",
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "PViteDeploymentTestPipelinePipelineArtifactsBucketEncryptionKey9C41075A",
+                  "Arn",
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "PViteDeploymentViteBuildProjectRoleDefaultPolicy327F99C0",
+        "Roles": [
+          {
+            "Ref": "PViteDeploymentViteBuildProjectRole4A6720BB",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "PWebhookHandlerB6C7E847": {
       "DependsOn": [
-        "TestPipelineWebhookHandlerServiceRole4EDBE532",
+        "PWebhookHandlerServiceRoleCBBE018C",
       ],
       "Properties": {
         "Code": {
@@ -875,7 +2142,7 @@ exports[`Pipeline Construct Integration Tests should create valid CloudFormation
         "Environment": {
           "Variables": {
             "PIPELINE_NAME": {
-              "Ref": "TestPipeline6B875B6B",
+              "Ref": "PViteDeploymentTestPipelinePipelineC2EA5176",
             },
             "WEBHOOK_URL": "https://example.com/webhook",
           },
@@ -884,7 +2151,7 @@ exports[`Pipeline Construct Integration Tests should create valid CloudFormation
         "MemorySize": 128,
         "Role": {
           "Fn::GetAtt": [
-            "TestPipelineWebhookHandlerServiceRole4EDBE532",
+            "PWebhookHandlerServiceRoleCBBE018C",
             "Arn",
           ],
         },
@@ -893,7 +2160,7 @@ exports[`Pipeline Construct Integration Tests should create valid CloudFormation
       },
       "Type": "AWS::Lambda::Function",
     },
-    "TestPipelineWebhookHandlerServiceRole4EDBE532": {
+    "PWebhookHandlerServiceRoleCBBE018C": {
       "Properties": {
         "AssumeRolePolicyDocument": {
           "Statement": [
@@ -924,1069 +2191,43 @@ exports[`Pipeline Construct Integration Tests should create valid CloudFormation
       },
       "Type": "AWS::IAM::Role",
     },
-  },
-  "Rules": {
-    "CheckBootstrapVersion": {
-      "Assertions": [
-        {
-          "Assert": {
-            "Fn::Not": [
-              {
-                "Fn::Contains": [
-                  [
-                    "1",
-                    "2",
-                    "3",
-                    "4",
-                    "5",
-                  ],
-                  {
-                    "Ref": "BootstrapVersion",
-                  },
-                ],
-              },
-            ],
-          },
-          "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI.",
-        },
-      ],
-    },
-  },
-}
-`;
-
-exports[`Pipeline Construct Lambda Function Configuration should configure Lambda with correct IAM permissions 1`] = `
-{
-  "policies": {
-    "TestBuildProjectRoleDefaultPolicyF85B9AEB": {
-      "Properties": {
-        "PolicyDocument": {
-          "Statement": [
-            {
-              "Action": [
-                "logs:CreateLogGroup",
-                "logs:CreateLogStream",
-                "logs:PutLogEvents",
-              ],
-              "Effect": "Allow",
-              "Resource": [
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:",
-                      {
-                        "Ref": "AWS::Partition",
-                      },
-                      ":logs:",
-                      {
-                        "Ref": "AWS::Region",
-                      },
-                      ":",
-                      {
-                        "Ref": "AWS::AccountId",
-                      },
-                      ":log-group:/aws/codebuild/",
-                      {
-                        "Ref": "TestBuildProject200EB7F7",
-                      },
-                    ],
-                  ],
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:",
-                      {
-                        "Ref": "AWS::Partition",
-                      },
-                      ":logs:",
-                      {
-                        "Ref": "AWS::Region",
-                      },
-                      ":",
-                      {
-                        "Ref": "AWS::AccountId",
-                      },
-                      ":log-group:/aws/codebuild/",
-                      {
-                        "Ref": "TestBuildProject200EB7F7",
-                      },
-                      ":*",
-                    ],
-                  ],
-                },
-              ],
-            },
-            {
-              "Action": [
-                "codebuild:CreateReportGroup",
-                "codebuild:CreateReport",
-                "codebuild:UpdateReport",
-                "codebuild:BatchPutTestCases",
-                "codebuild:BatchPutCodeCoverages",
-              ],
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::Join": [
-                  "",
-                  [
-                    "arn:",
-                    {
-                      "Ref": "AWS::Partition",
-                    },
-                    ":codebuild:",
-                    {
-                      "Ref": "AWS::Region",
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::AccountId",
-                    },
-                    ":report-group/",
-                    {
-                      "Ref": "TestBuildProject200EB7F7",
-                    },
-                    "-*",
-                  ],
-                ],
-              },
-            },
-            {
-              "Action": [
-                "s3:GetObject*",
-                "s3:GetBucket*",
-                "s3:List*",
-                "s3:DeleteObject*",
-                "s3:PutObject",
-                "s3:PutObjectLegalHold",
-                "s3:PutObjectRetention",
-                "s3:PutObjectTagging",
-                "s3:PutObjectVersionTagging",
-                "s3:Abort*",
-              ],
-              "Effect": "Allow",
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "TestPipelineArtifactsBucketC6926372",
-                    "Arn",
-                  ],
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      {
-                        "Fn::GetAtt": [
-                          "TestPipelineArtifactsBucketC6926372",
-                          "Arn",
-                        ],
-                      },
-                      "/*",
-                    ],
-                  ],
-                },
-              ],
-            },
-            {
-              "Action": [
-                "kms:Decrypt",
-                "kms:DescribeKey",
-                "kms:Encrypt",
-                "kms:ReEncrypt*",
-                "kms:GenerateDataKey*",
-              ],
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::GetAtt": [
-                  "TestPipelineArtifactsBucketEncryptionKeyD9CD82AE",
-                  "Arn",
-                ],
-              },
-            },
-            {
-              "Action": [
-                "kms:Decrypt",
-                "kms:Encrypt",
-                "kms:ReEncrypt*",
-                "kms:GenerateDataKey*",
-              ],
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::GetAtt": [
-                  "TestPipelineArtifactsBucketEncryptionKeyD9CD82AE",
-                  "Arn",
-                ],
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "PolicyName": "TestBuildProjectRoleDefaultPolicyF85B9AEB",
-        "Roles": [
-          {
-            "Ref": "TestBuildProjectRole189F23AF",
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Policy",
-    },
-    "TestPipelineBuildCodePipelineActionRoleDefaultPolicy4A09011F": {
-      "Properties": {
-        "PolicyDocument": {
-          "Statement": [
-            {
-              "Action": [
-                "codebuild:BatchGetBuilds",
-                "codebuild:StartBuild",
-                "codebuild:StopBuild",
-              ],
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::GetAtt": [
-                  "TestBuildProject200EB7F7",
-                  "Arn",
-                ],
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "PolicyName": "TestPipelineBuildCodePipelineActionRoleDefaultPolicy4A09011F",
-        "Roles": [
-          {
-            "Ref": "TestPipelineBuildCodePipelineActionRoleAA8222B3",
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Policy",
-    },
-    "TestPipelineDeployCodePipelineActionRoleDefaultPolicy06E232B6": {
-      "Properties": {
-        "PolicyDocument": {
-          "Statement": [
-            {
-              "Action": [
-                "s3:DeleteObject*",
-                "s3:PutObject",
-                "s3:PutObjectLegalHold",
-                "s3:PutObjectRetention",
-                "s3:PutObjectTagging",
-                "s3:PutObjectVersionTagging",
-                "s3:Abort*",
-              ],
-              "Effect": "Allow",
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "TestDeployBucket598113DD",
-                    "Arn",
-                  ],
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      {
-                        "Fn::GetAtt": [
-                          "TestDeployBucket598113DD",
-                          "Arn",
-                        ],
-                      },
-                      "/*",
-                    ],
-                  ],
-                },
-              ],
-            },
-            {
-              "Action": [
-                "s3:GetObject*",
-                "s3:GetBucket*",
-                "s3:List*",
-              ],
-              "Effect": "Allow",
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "TestPipelineArtifactsBucketC6926372",
-                    "Arn",
-                  ],
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      {
-                        "Fn::GetAtt": [
-                          "TestPipelineArtifactsBucketC6926372",
-                          "Arn",
-                        ],
-                      },
-                      "/*",
-                    ],
-                  ],
-                },
-              ],
-            },
-            {
-              "Action": [
-                "kms:Decrypt",
-                "kms:DescribeKey",
-              ],
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::GetAtt": [
-                  "TestPipelineArtifactsBucketEncryptionKeyD9CD82AE",
-                  "Arn",
-                ],
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "PolicyName": "TestPipelineDeployCodePipelineActionRoleDefaultPolicy06E232B6",
-        "Roles": [
-          {
-            "Ref": "TestPipelineDeployCodePipelineActionRole165722EB",
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Policy",
-    },
-    "TestPipelineRoleDefaultPolicy5A6143C8": {
-      "Properties": {
-        "PolicyDocument": {
-          "Statement": [
-            {
-              "Action": [
-                "s3:GetObject*",
-                "s3:GetBucket*",
-                "s3:List*",
-                "s3:DeleteObject*",
-                "s3:PutObject",
-                "s3:PutObjectLegalHold",
-                "s3:PutObjectRetention",
-                "s3:PutObjectTagging",
-                "s3:PutObjectVersionTagging",
-                "s3:Abort*",
-              ],
-              "Effect": "Allow",
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "TestPipelineArtifactsBucketC6926372",
-                    "Arn",
-                  ],
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      {
-                        "Fn::GetAtt": [
-                          "TestPipelineArtifactsBucketC6926372",
-                          "Arn",
-                        ],
-                      },
-                      "/*",
-                    ],
-                  ],
-                },
-              ],
-            },
-            {
-              "Action": [
-                "kms:Decrypt",
-                "kms:DescribeKey",
-                "kms:Encrypt",
-                "kms:ReEncrypt*",
-                "kms:GenerateDataKey*",
-              ],
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::GetAtt": [
-                  "TestPipelineArtifactsBucketEncryptionKeyD9CD82AE",
-                  "Arn",
-                ],
-              },
-            },
-            {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::GetAtt": [
-                  "TestPipelineBuildCodePipelineActionRoleAA8222B3",
-                  "Arn",
-                ],
-              },
-            },
-            {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::GetAtt": [
-                  "TestPipelineDeployCodePipelineActionRole165722EB",
-                  "Arn",
-                ],
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "PolicyName": "TestPipelineRoleDefaultPolicy5A6143C8",
-        "Roles": [
-          {
-            "Ref": "TestPipelineRole612B87A5",
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Policy",
-    },
-  },
-  "roles": {
-    "TestBuildProjectRole189F23AF": {
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Statement": [
-            {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Principal": {
-                "Service": "codebuild.amazonaws.com",
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-      },
-      "Type": "AWS::IAM::Role",
-    },
-    "TestPipelineBuildCodePipelineActionRoleAA8222B3": {
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Statement": [
-            {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Principal": {
-                "AWS": {
-                  "Fn::GetAtt": [
-                    "TestPipelineRole612B87A5",
-                    "Arn",
-                  ],
-                },
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-      },
-      "Type": "AWS::IAM::Role",
-    },
-    "TestPipelineDeployCodePipelineActionRole165722EB": {
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Statement": [
-            {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Principal": {
-                "AWS": {
-                  "Fn::GetAtt": [
-                    "TestPipelineRole612B87A5",
-                    "Arn",
-                  ],
-                },
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-      },
-      "Type": "AWS::IAM::Role",
-    },
-    "TestPipelineRole612B87A5": {
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Statement": [
-            {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Principal": {
-                "Service": "codepipeline.amazonaws.com",
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-      },
-      "Type": "AWS::IAM::Role",
-    },
-    "TestPipelineWebhookHandlerServiceRole4EDBE532": {
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Statement": [
-            {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Principal": {
-                "Service": "lambda.amazonaws.com",
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "ManagedPolicyArns": [
-          {
-            "Fn::Join": [
-              "",
-              [
-                "arn:",
-                {
-                  "Ref": "AWS::Partition",
-                },
-                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
-              ],
-            ],
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Role",
-    },
-  },
-}
-`;
-
-exports[`Pipeline Construct Lambda Function Configuration should configure Lambda with correct runtime and handler 1`] = `
-{
-  "TestPipelineWebhookHandler3547E834": {
-    "DependsOn": [
-      "TestPipelineWebhookHandlerServiceRole4EDBE532",
-    ],
-    "Properties": {
-      "Code": {
-        "S3Bucket": {
-          "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
-        },
-        "S3Key": "c78032609fe279de6ec4877ffd97a2f32f67657469244a4a3949cde00efc4826.zip",
-      },
-      "Description": "Lambda function to send notifications on pipeline state changes",
-      "Environment": {
-        "Variables": {
-          "PIPELINE_NAME": {
-            "Ref": "TestPipeline6B875B6B",
-          },
-          "WEBHOOK_URL": "https://example.com/webhook",
-        },
-      },
-      "Handler": "src.main.handler",
-      "MemorySize": 128,
-      "Role": {
-        "Fn::GetAtt": [
-          "TestPipelineWebhookHandlerServiceRole4EDBE532",
-          "Arn",
-        ],
-      },
-      "Runtime": "python3.10",
-      "Timeout": 30,
-    },
-    "Type": "AWS::Lambda::Function",
-  },
-}
-`;
-
-exports[`Pipeline Construct Pipeline Creation should create pipeline with webhook 1`] = `
-{
-  "Parameters": "<Parameters elided>",
-  "Resources": {
-    "TestBuildProject200EB7F7": {
-      "Properties": {
-        "Artifacts": {
-          "Type": "NO_ARTIFACTS",
-        },
-        "Cache": {
-          "Type": "NO_CACHE",
-        },
-        "EncryptionKey": {
-          "Fn::GetAtt": [
-            "TestPipelineArtifactsBucketEncryptionKeyD9CD82AE",
-            "Arn",
-          ],
-        },
-        "Environment": {
-          "ComputeType": "BUILD_GENERAL1_SMALL",
-          "Image": "aws/codebuild/standard:7.0",
-          "ImagePullCredentialsType": "CODEBUILD",
-          "PrivilegedMode": false,
-          "Type": "LINUX_CONTAINER",
-        },
-        "ServiceRole": {
-          "Fn::GetAtt": [
-            "TestBuildProjectRole189F23AF",
-            "Arn",
-          ],
-        },
-        "Source": {
-          "BuildSpec": "{
-  "version": "0.2",
-  "phases": {
-    "build": {
-      "commands": [
-        "echo 'Hello, World!'"
-      ]
-    }
-  }
-}",
-          "Type": "NO_SOURCE",
-        },
-      },
-      "Type": "AWS::CodeBuild::Project",
-    },
-    "TestBuildProjectRole189F23AF": {
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Statement": [
-            {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Principal": {
-                "Service": "codebuild.amazonaws.com",
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-      },
-      "Type": "AWS::IAM::Role",
-    },
-    "TestBuildProjectRoleDefaultPolicyF85B9AEB": {
-      "Properties": {
-        "PolicyDocument": {
-          "Statement": [
-            {
-              "Action": [
-                "logs:CreateLogGroup",
-                "logs:CreateLogStream",
-                "logs:PutLogEvents",
-              ],
-              "Effect": "Allow",
-              "Resource": [
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:",
-                      {
-                        "Ref": "AWS::Partition",
-                      },
-                      ":logs:",
-                      {
-                        "Ref": "AWS::Region",
-                      },
-                      ":",
-                      {
-                        "Ref": "AWS::AccountId",
-                      },
-                      ":log-group:/aws/codebuild/",
-                      {
-                        "Ref": "TestBuildProject200EB7F7",
-                      },
-                    ],
-                  ],
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:",
-                      {
-                        "Ref": "AWS::Partition",
-                      },
-                      ":logs:",
-                      {
-                        "Ref": "AWS::Region",
-                      },
-                      ":",
-                      {
-                        "Ref": "AWS::AccountId",
-                      },
-                      ":log-group:/aws/codebuild/",
-                      {
-                        "Ref": "TestBuildProject200EB7F7",
-                      },
-                      ":*",
-                    ],
-                  ],
-                },
-              ],
-            },
-            {
-              "Action": [
-                "codebuild:CreateReportGroup",
-                "codebuild:CreateReport",
-                "codebuild:UpdateReport",
-                "codebuild:BatchPutTestCases",
-                "codebuild:BatchPutCodeCoverages",
-              ],
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::Join": [
-                  "",
-                  [
-                    "arn:",
-                    {
-                      "Ref": "AWS::Partition",
-                    },
-                    ":codebuild:",
-                    {
-                      "Ref": "AWS::Region",
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::AccountId",
-                    },
-                    ":report-group/",
-                    {
-                      "Ref": "TestBuildProject200EB7F7",
-                    },
-                    "-*",
-                  ],
-                ],
-              },
-            },
-            {
-              "Action": [
-                "s3:GetObject*",
-                "s3:GetBucket*",
-                "s3:List*",
-                "s3:DeleteObject*",
-                "s3:PutObject",
-                "s3:PutObjectLegalHold",
-                "s3:PutObjectRetention",
-                "s3:PutObjectTagging",
-                "s3:PutObjectVersionTagging",
-                "s3:Abort*",
-              ],
-              "Effect": "Allow",
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "TestPipelineArtifactsBucketC6926372",
-                    "Arn",
-                  ],
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      {
-                        "Fn::GetAtt": [
-                          "TestPipelineArtifactsBucketC6926372",
-                          "Arn",
-                        ],
-                      },
-                      "/*",
-                    ],
-                  ],
-                },
-              ],
-            },
-            {
-              "Action": [
-                "kms:Decrypt",
-                "kms:DescribeKey",
-                "kms:Encrypt",
-                "kms:ReEncrypt*",
-                "kms:GenerateDataKey*",
-              ],
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::GetAtt": [
-                  "TestPipelineArtifactsBucketEncryptionKeyD9CD82AE",
-                  "Arn",
-                ],
-              },
-            },
-            {
-              "Action": [
-                "kms:Decrypt",
-                "kms:Encrypt",
-                "kms:ReEncrypt*",
-                "kms:GenerateDataKey*",
-              ],
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::GetAtt": [
-                  "TestPipelineArtifactsBucketEncryptionKeyD9CD82AE",
-                  "Arn",
-                ],
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "PolicyName": "TestBuildProjectRoleDefaultPolicyF85B9AEB",
-        "Roles": [
-          {
-            "Ref": "TestBuildProjectRole189F23AF",
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Policy",
-    },
-    "TestDeployBucket598113DD": {
+    "SiteBucket397A1860": {
       "DeletionPolicy": "Retain",
       "Type": "AWS::S3::Bucket",
       "UpdateReplacePolicy": "Retain",
     },
-    "TestPipeline6B875B6B": {
-      "DependsOn": [
-        "TestPipelineRoleDefaultPolicy5A6143C8",
-        "TestPipelineRole612B87A5",
-      ],
-      "Properties": {
-        "ArtifactStore": {
-          "EncryptionKey": {
-            "Id": {
-              "Fn::GetAtt": [
-                "TestPipelineArtifactsBucketEncryptionKeyD9CD82AE",
-                "Arn",
-              ],
-            },
-            "Type": "KMS",
-          },
-          "Location": {
-            "Ref": "TestPipelineArtifactsBucketC6926372",
-          },
-          "Type": "S3",
-        },
-        "Name": "TestPipeline",
-        "RoleArn": {
-          "Fn::GetAtt": [
-            "TestPipelineRole612B87A5",
-            "Arn",
-          ],
-        },
-        "Stages": [
-          {
-            "Actions": [
-              {
-                "ActionTypeId": {
-                  "Category": "Source",
-                  "Owner": "ThirdParty",
-                  "Provider": "GitHub",
-                  "Version": "1",
-                },
-                "Configuration": {
-                  "Branch": "master",
-                  "OAuthToken": "{{resolve:secretsmanager:github-token:SecretString:::}}",
-                  "Owner": "test-owner",
-                  "PollForSourceChanges": false,
-                  "Repo": "test-repo",
-                },
-                "Name": "Source",
-                "OutputArtifacts": [
-                  {
-                    "Name": "SourceOutput",
-                  },
-                ],
-                "RunOrder": 1,
-              },
-            ],
-            "Name": "Source",
-          },
-          {
-            "Actions": [
-              {
-                "ActionTypeId": {
-                  "Category": "Build",
-                  "Owner": "AWS",
-                  "Provider": "CodeBuild",
-                  "Version": "1",
-                },
-                "Configuration": {
-                  "ProjectName": {
-                    "Ref": "TestBuildProject200EB7F7",
-                  },
-                },
-                "InputArtifacts": [
-                  {
-                    "Name": "SourceOutput",
-                  },
-                ],
-                "Name": "Build",
-                "OutputArtifacts": [
-                  {
-                    "Name": "BuildOutput",
-                  },
-                ],
-                "RoleArn": {
-                  "Fn::GetAtt": [
-                    "TestPipelineBuildCodePipelineActionRoleAA8222B3",
-                    "Arn",
-                  ],
-                },
-                "RunOrder": 1,
-              },
-            ],
-            "Name": "Build",
-          },
-          {
-            "Actions": [
-              {
-                "ActionTypeId": {
-                  "Category": "Deploy",
-                  "Owner": "AWS",
-                  "Provider": "S3",
-                  "Version": "1",
-                },
-                "Configuration": {
-                  "BucketName": {
-                    "Ref": "TestDeployBucket598113DD",
-                  },
-                  "Extract": "true",
-                },
-                "InputArtifacts": [
-                  {
-                    "Name": "BuildOutput",
-                  },
-                ],
-                "Name": "Deploy",
-                "RoleArn": {
-                  "Fn::GetAtt": [
-                    "TestPipelineDeployCodePipelineActionRole165722EB",
-                    "Arn",
-                  ],
-                },
-                "RunOrder": 1,
-              },
-            ],
-            "Name": "Deploy",
-          },
-        ],
-      },
-      "Type": "AWS::CodePipeline::Pipeline",
-    },
-    "TestPipelineArtifactsBucketC6926372": {
-      "DeletionPolicy": "Retain",
-      "Properties": {
-        "BucketEncryption": {
-          "ServerSideEncryptionConfiguration": [
-            {
-              "ServerSideEncryptionByDefault": {
-                "KMSMasterKeyID": {
-                  "Fn::GetAtt": [
-                    "TestPipelineArtifactsBucketEncryptionKeyD9CD82AE",
-                    "Arn",
-                  ],
-                },
-                "SSEAlgorithm": "aws:kms",
-              },
-            },
-          ],
-        },
-        "PublicAccessBlockConfiguration": {
-          "BlockPublicAcls": true,
-          "BlockPublicPolicy": true,
-          "IgnorePublicAcls": true,
-          "RestrictPublicBuckets": true,
-        },
-      },
-      "Type": "AWS::S3::Bucket",
-      "UpdateReplacePolicy": "Retain",
-    },
-    "TestPipelineArtifactsBucketEncryptionKeyAlias45F030EF": {
-      "DeletionPolicy": "Delete",
-      "Properties": {
-        "AliasName": "alias/codepipeline-teststacktestpipeline9e1085fc",
-        "TargetKeyId": {
-          "Fn::GetAtt": [
-            "TestPipelineArtifactsBucketEncryptionKeyD9CD82AE",
-            "Arn",
-          ],
-        },
-      },
-      "Type": "AWS::KMS::Alias",
-      "UpdateReplacePolicy": "Delete",
-    },
-    "TestPipelineArtifactsBucketEncryptionKeyD9CD82AE": {
-      "DeletionPolicy": "Delete",
-      "Properties": {
-        "KeyPolicy": {
-          "Statement": [
-            {
-              "Action": "kms:*",
-              "Effect": "Allow",
-              "Principal": {
-                "AWS": {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:",
-                      {
-                        "Ref": "AWS::Partition",
-                      },
-                      ":iam::",
-                      {
-                        "Ref": "AWS::AccountId",
-                      },
-                      ":root",
-                    ],
-                  ],
-                },
-              },
-              "Resource": "*",
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-      },
-      "Type": "AWS::KMS::Key",
-      "UpdateReplacePolicy": "Delete",
-    },
-    "TestPipelineArtifactsBucketPolicy8C7094B2": {
+    "SiteBucketPolicy3AC1D0F8": {
       "Properties": {
         "Bucket": {
-          "Ref": "TestPipelineArtifactsBucketC6926372",
+          "Ref": "SiteBucket397A1860",
         },
         "PolicyDocument": {
           "Statement": [
             {
-              "Action": "s3:*",
-              "Condition": {
-                "Bool": {
-                  "aws:SecureTransport": "false",
-                },
-              },
-              "Effect": "Deny",
+              "Action": "s3:GetObject",
+              "Effect": "Allow",
               "Principal": {
-                "AWS": "*",
-              },
-              "Resource": [
-                {
+                "CanonicalUser": {
                   "Fn::GetAtt": [
-                    "TestPipelineArtifactsBucketC6926372",
-                    "Arn",
+                    "CdnOrigin1S3Origin9BD26264",
+                    "S3CanonicalUserId",
                   ],
                 },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      {
-                        "Fn::GetAtt": [
-                          "TestPipelineArtifactsBucketC6926372",
-                          "Arn",
-                        ],
-                      },
-                      "/*",
-                    ],
+              },
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    {
+                      "Fn::GetAtt": [
+                        "SiteBucket397A1860",
+                        "Arn",
+                      ],
+                    },
+                    "/*",
                   ],
-                },
-              ],
+                ],
+              },
             },
           ],
           "Version": "2012-10-17",
@@ -1994,434 +2235,6 @@ exports[`Pipeline Construct Pipeline Creation should create pipeline with webhoo
       },
       "Type": "AWS::S3::BucketPolicy",
     },
-    "TestPipelineBuildCodePipelineActionRoleAA8222B3": {
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Statement": [
-            {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Principal": {
-                "AWS": {
-                  "Fn::GetAtt": [
-                    "TestPipelineRole612B87A5",
-                    "Arn",
-                  ],
-                },
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-      },
-      "Type": "AWS::IAM::Role",
-    },
-    "TestPipelineBuildCodePipelineActionRoleDefaultPolicy4A09011F": {
-      "Properties": {
-        "PolicyDocument": {
-          "Statement": [
-            {
-              "Action": [
-                "codebuild:BatchGetBuilds",
-                "codebuild:StartBuild",
-                "codebuild:StopBuild",
-              ],
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::GetAtt": [
-                  "TestBuildProject200EB7F7",
-                  "Arn",
-                ],
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "PolicyName": "TestPipelineBuildCodePipelineActionRoleDefaultPolicy4A09011F",
-        "Roles": [
-          {
-            "Ref": "TestPipelineBuildCodePipelineActionRoleAA8222B3",
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Policy",
-    },
-    "TestPipelineDeployCodePipelineActionRole165722EB": {
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Statement": [
-            {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Principal": {
-                "AWS": {
-                  "Fn::GetAtt": [
-                    "TestPipelineRole612B87A5",
-                    "Arn",
-                  ],
-                },
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-      },
-      "Type": "AWS::IAM::Role",
-    },
-    "TestPipelineDeployCodePipelineActionRoleDefaultPolicy06E232B6": {
-      "Properties": {
-        "PolicyDocument": {
-          "Statement": [
-            {
-              "Action": [
-                "s3:DeleteObject*",
-                "s3:PutObject",
-                "s3:PutObjectLegalHold",
-                "s3:PutObjectRetention",
-                "s3:PutObjectTagging",
-                "s3:PutObjectVersionTagging",
-                "s3:Abort*",
-              ],
-              "Effect": "Allow",
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "TestDeployBucket598113DD",
-                    "Arn",
-                  ],
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      {
-                        "Fn::GetAtt": [
-                          "TestDeployBucket598113DD",
-                          "Arn",
-                        ],
-                      },
-                      "/*",
-                    ],
-                  ],
-                },
-              ],
-            },
-            {
-              "Action": [
-                "s3:GetObject*",
-                "s3:GetBucket*",
-                "s3:List*",
-              ],
-              "Effect": "Allow",
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "TestPipelineArtifactsBucketC6926372",
-                    "Arn",
-                  ],
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      {
-                        "Fn::GetAtt": [
-                          "TestPipelineArtifactsBucketC6926372",
-                          "Arn",
-                        ],
-                      },
-                      "/*",
-                    ],
-                  ],
-                },
-              ],
-            },
-            {
-              "Action": [
-                "kms:Decrypt",
-                "kms:DescribeKey",
-              ],
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::GetAtt": [
-                  "TestPipelineArtifactsBucketEncryptionKeyD9CD82AE",
-                  "Arn",
-                ],
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "PolicyName": "TestPipelineDeployCodePipelineActionRoleDefaultPolicy06E232B6",
-        "Roles": [
-          {
-            "Ref": "TestPipelineDeployCodePipelineActionRole165722EB",
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Policy",
-    },
-    "TestPipelinePipelineStateChange2F9CF929": {
-      "Properties": {
-        "Description": "Lambda function to handle pipeline state changes",
-        "EventPattern": {
-          "detail-type": [
-            "CodePipeline Pipeline Execution State Change",
-          ],
-          "resources": [
-            {
-              "Fn::Join": [
-                "",
-                [
-                  "arn:",
-                  {
-                    "Ref": "AWS::Partition",
-                  },
-                  ":codepipeline:",
-                  {
-                    "Ref": "AWS::Region",
-                  },
-                  ":",
-                  {
-                    "Ref": "AWS::AccountId",
-                  },
-                  ":",
-                  {
-                    "Ref": "TestPipeline6B875B6B",
-                  },
-                ],
-              ],
-            },
-          ],
-          "source": [
-            "aws.codepipeline",
-          ],
-        },
-        "State": "ENABLED",
-        "Targets": [
-          {
-            "Arn": {
-              "Fn::GetAtt": [
-                "TestPipelineWebhookHandler3547E834",
-                "Arn",
-              ],
-            },
-            "Id": "Target0",
-          },
-        ],
-      },
-      "Type": "AWS::Events::Rule",
-    },
-    "TestPipelinePipelineStateChangeAllowEventRuleTestStackTestPipelineWebhookHandler4223326E60294815": {
-      "Properties": {
-        "Action": "lambda:InvokeFunction",
-        "FunctionName": {
-          "Fn::GetAtt": [
-            "TestPipelineWebhookHandler3547E834",
-            "Arn",
-          ],
-        },
-        "Principal": "events.amazonaws.com",
-        "SourceArn": {
-          "Fn::GetAtt": [
-            "TestPipelinePipelineStateChange2F9CF929",
-            "Arn",
-          ],
-        },
-      },
-      "Type": "AWS::Lambda::Permission",
-    },
-    "TestPipelineRole612B87A5": {
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Statement": [
-            {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Principal": {
-                "Service": "codepipeline.amazonaws.com",
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-      },
-      "Type": "AWS::IAM::Role",
-    },
-    "TestPipelineRoleDefaultPolicy5A6143C8": {
-      "Properties": {
-        "PolicyDocument": {
-          "Statement": [
-            {
-              "Action": [
-                "s3:GetObject*",
-                "s3:GetBucket*",
-                "s3:List*",
-                "s3:DeleteObject*",
-                "s3:PutObject",
-                "s3:PutObjectLegalHold",
-                "s3:PutObjectRetention",
-                "s3:PutObjectTagging",
-                "s3:PutObjectVersionTagging",
-                "s3:Abort*",
-              ],
-              "Effect": "Allow",
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "TestPipelineArtifactsBucketC6926372",
-                    "Arn",
-                  ],
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      {
-                        "Fn::GetAtt": [
-                          "TestPipelineArtifactsBucketC6926372",
-                          "Arn",
-                        ],
-                      },
-                      "/*",
-                    ],
-                  ],
-                },
-              ],
-            },
-            {
-              "Action": [
-                "kms:Decrypt",
-                "kms:DescribeKey",
-                "kms:Encrypt",
-                "kms:ReEncrypt*",
-                "kms:GenerateDataKey*",
-              ],
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::GetAtt": [
-                  "TestPipelineArtifactsBucketEncryptionKeyD9CD82AE",
-                  "Arn",
-                ],
-              },
-            },
-            {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::GetAtt": [
-                  "TestPipelineBuildCodePipelineActionRoleAA8222B3",
-                  "Arn",
-                ],
-              },
-            },
-            {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::GetAtt": [
-                  "TestPipelineDeployCodePipelineActionRole165722EB",
-                  "Arn",
-                ],
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "PolicyName": "TestPipelineRoleDefaultPolicy5A6143C8",
-        "Roles": [
-          {
-            "Ref": "TestPipelineRole612B87A5",
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Policy",
-    },
-    "TestPipelineSourceWebhookResource00005D08": {
-      "Properties": {
-        "Authentication": "GITHUB_HMAC",
-        "AuthenticationConfiguration": {
-          "SecretToken": "{{resolve:secretsmanager:github-token:SecretString:::}}",
-        },
-        "Filters": [
-          {
-            "JsonPath": "$.ref",
-            "MatchEquals": "refs/heads/{Branch}",
-          },
-        ],
-        "RegisterWithThirdParty": true,
-        "TargetAction": "Source",
-        "TargetPipeline": {
-          "Ref": "TestPipeline6B875B6B",
-        },
-        "TargetPipelineVersion": 1,
-      },
-      "Type": "AWS::CodePipeline::Webhook",
-    },
-    "TestPipelineWebhookHandler3547E834": {
-      "DependsOn": [
-        "TestPipelineWebhookHandlerServiceRole4EDBE532",
-      ],
-      "Properties": {
-        "Code": {
-          "S3Bucket": {
-            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
-          },
-          "S3Key": "<S3Key:elided>",
-        },
-        "Description": "Lambda function to send notifications on pipeline state changes",
-        "Environment": {
-          "Variables": {
-            "PIPELINE_NAME": {
-              "Ref": "TestPipeline6B875B6B",
-            },
-            "WEBHOOK_URL": "https://example.com/webhook",
-          },
-        },
-        "Handler": "src.main.handler",
-        "MemorySize": 128,
-        "Role": {
-          "Fn::GetAtt": [
-            "TestPipelineWebhookHandlerServiceRole4EDBE532",
-            "Arn",
-          ],
-        },
-        "Runtime": "python3.10",
-        "Timeout": 30,
-      },
-      "Type": "AWS::Lambda::Function",
-    },
-    "TestPipelineWebhookHandlerServiceRole4EDBE532": {
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Statement": [
-            {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Principal": {
-                "Service": "lambda.amazonaws.com",
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "ManagedPolicyArns": [
-          {
-            "Fn::Join": [
-              "",
-              [
-                "arn:",
-                {
-                  "Ref": "AWS::Partition",
-                },
-                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
-              ],
-            ],
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Role",
-    },
   },
   "Rules": {
     "CheckBootstrapVersion": {
@@ -2449,972 +2262,6 @@ exports[`Pipeline Construct Pipeline Creation should create pipeline with webhoo
         },
       ],
     },
-  },
-}
-`;
-
-exports[`Pipeline Construct Pipeline Creation should create pipeline without webhook 1`] = `
-{
-  "Parameters": "<Parameters elided>",
-  "Resources": {
-    "TestBuildProject200EB7F7": {
-      "Properties": {
-        "Artifacts": {
-          "Type": "NO_ARTIFACTS",
-        },
-        "Cache": {
-          "Type": "NO_CACHE",
-        },
-        "EncryptionKey": {
-          "Fn::GetAtt": [
-            "TestPipelineArtifactsBucketEncryptionKeyD9CD82AE",
-            "Arn",
-          ],
-        },
-        "Environment": {
-          "ComputeType": "BUILD_GENERAL1_SMALL",
-          "Image": "aws/codebuild/standard:7.0",
-          "ImagePullCredentialsType": "CODEBUILD",
-          "PrivilegedMode": false,
-          "Type": "LINUX_CONTAINER",
-        },
-        "ServiceRole": {
-          "Fn::GetAtt": [
-            "TestBuildProjectRole189F23AF",
-            "Arn",
-          ],
-        },
-        "Source": {
-          "BuildSpec": "{
-  "version": "0.2",
-  "phases": {
-    "build": {
-      "commands": [
-        "echo 'Hello, World!'"
-      ]
-    }
-  }
-}",
-          "Type": "NO_SOURCE",
-        },
-      },
-      "Type": "AWS::CodeBuild::Project",
-    },
-    "TestBuildProjectRole189F23AF": {
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Statement": [
-            {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Principal": {
-                "Service": "codebuild.amazonaws.com",
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-      },
-      "Type": "AWS::IAM::Role",
-    },
-    "TestBuildProjectRoleDefaultPolicyF85B9AEB": {
-      "Properties": {
-        "PolicyDocument": {
-          "Statement": [
-            {
-              "Action": [
-                "logs:CreateLogGroup",
-                "logs:CreateLogStream",
-                "logs:PutLogEvents",
-              ],
-              "Effect": "Allow",
-              "Resource": [
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:",
-                      {
-                        "Ref": "AWS::Partition",
-                      },
-                      ":logs:",
-                      {
-                        "Ref": "AWS::Region",
-                      },
-                      ":",
-                      {
-                        "Ref": "AWS::AccountId",
-                      },
-                      ":log-group:/aws/codebuild/",
-                      {
-                        "Ref": "TestBuildProject200EB7F7",
-                      },
-                    ],
-                  ],
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:",
-                      {
-                        "Ref": "AWS::Partition",
-                      },
-                      ":logs:",
-                      {
-                        "Ref": "AWS::Region",
-                      },
-                      ":",
-                      {
-                        "Ref": "AWS::AccountId",
-                      },
-                      ":log-group:/aws/codebuild/",
-                      {
-                        "Ref": "TestBuildProject200EB7F7",
-                      },
-                      ":*",
-                    ],
-                  ],
-                },
-              ],
-            },
-            {
-              "Action": [
-                "codebuild:CreateReportGroup",
-                "codebuild:CreateReport",
-                "codebuild:UpdateReport",
-                "codebuild:BatchPutTestCases",
-                "codebuild:BatchPutCodeCoverages",
-              ],
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::Join": [
-                  "",
-                  [
-                    "arn:",
-                    {
-                      "Ref": "AWS::Partition",
-                    },
-                    ":codebuild:",
-                    {
-                      "Ref": "AWS::Region",
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::AccountId",
-                    },
-                    ":report-group/",
-                    {
-                      "Ref": "TestBuildProject200EB7F7",
-                    },
-                    "-*",
-                  ],
-                ],
-              },
-            },
-            {
-              "Action": [
-                "s3:GetObject*",
-                "s3:GetBucket*",
-                "s3:List*",
-                "s3:DeleteObject*",
-                "s3:PutObject",
-                "s3:PutObjectLegalHold",
-                "s3:PutObjectRetention",
-                "s3:PutObjectTagging",
-                "s3:PutObjectVersionTagging",
-                "s3:Abort*",
-              ],
-              "Effect": "Allow",
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "TestPipelineArtifactsBucketC6926372",
-                    "Arn",
-                  ],
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      {
-                        "Fn::GetAtt": [
-                          "TestPipelineArtifactsBucketC6926372",
-                          "Arn",
-                        ],
-                      },
-                      "/*",
-                    ],
-                  ],
-                },
-              ],
-            },
-            {
-              "Action": [
-                "kms:Decrypt",
-                "kms:DescribeKey",
-                "kms:Encrypt",
-                "kms:ReEncrypt*",
-                "kms:GenerateDataKey*",
-              ],
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::GetAtt": [
-                  "TestPipelineArtifactsBucketEncryptionKeyD9CD82AE",
-                  "Arn",
-                ],
-              },
-            },
-            {
-              "Action": [
-                "kms:Decrypt",
-                "kms:Encrypt",
-                "kms:ReEncrypt*",
-                "kms:GenerateDataKey*",
-              ],
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::GetAtt": [
-                  "TestPipelineArtifactsBucketEncryptionKeyD9CD82AE",
-                  "Arn",
-                ],
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "PolicyName": "TestBuildProjectRoleDefaultPolicyF85B9AEB",
-        "Roles": [
-          {
-            "Ref": "TestBuildProjectRole189F23AF",
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Policy",
-    },
-    "TestDeployBucket598113DD": {
-      "DeletionPolicy": "Retain",
-      "Type": "AWS::S3::Bucket",
-      "UpdateReplacePolicy": "Retain",
-    },
-    "TestPipeline6B875B6B": {
-      "DependsOn": [
-        "TestPipelineRoleDefaultPolicy5A6143C8",
-        "TestPipelineRole612B87A5",
-      ],
-      "Properties": {
-        "ArtifactStore": {
-          "EncryptionKey": {
-            "Id": {
-              "Fn::GetAtt": [
-                "TestPipelineArtifactsBucketEncryptionKeyD9CD82AE",
-                "Arn",
-              ],
-            },
-            "Type": "KMS",
-          },
-          "Location": {
-            "Ref": "TestPipelineArtifactsBucketC6926372",
-          },
-          "Type": "S3",
-        },
-        "Name": "TestPipeline",
-        "RoleArn": {
-          "Fn::GetAtt": [
-            "TestPipelineRole612B87A5",
-            "Arn",
-          ],
-        },
-        "Stages": [
-          {
-            "Actions": [
-              {
-                "ActionTypeId": {
-                  "Category": "Source",
-                  "Owner": "ThirdParty",
-                  "Provider": "GitHub",
-                  "Version": "1",
-                },
-                "Configuration": {
-                  "Branch": "master",
-                  "OAuthToken": "{{resolve:secretsmanager:github-token:SecretString:::}}",
-                  "Owner": "test-owner",
-                  "PollForSourceChanges": false,
-                  "Repo": "test-repo",
-                },
-                "Name": "Source",
-                "OutputArtifacts": [
-                  {
-                    "Name": "SourceOutput",
-                  },
-                ],
-                "RunOrder": 1,
-              },
-            ],
-            "Name": "Source",
-          },
-          {
-            "Actions": [
-              {
-                "ActionTypeId": {
-                  "Category": "Build",
-                  "Owner": "AWS",
-                  "Provider": "CodeBuild",
-                  "Version": "1",
-                },
-                "Configuration": {
-                  "ProjectName": {
-                    "Ref": "TestBuildProject200EB7F7",
-                  },
-                },
-                "InputArtifacts": [
-                  {
-                    "Name": "SourceOutput",
-                  },
-                ],
-                "Name": "Build",
-                "OutputArtifacts": [
-                  {
-                    "Name": "BuildOutput",
-                  },
-                ],
-                "RoleArn": {
-                  "Fn::GetAtt": [
-                    "TestPipelineBuildCodePipelineActionRoleAA8222B3",
-                    "Arn",
-                  ],
-                },
-                "RunOrder": 1,
-              },
-            ],
-            "Name": "Build",
-          },
-          {
-            "Actions": [
-              {
-                "ActionTypeId": {
-                  "Category": "Deploy",
-                  "Owner": "AWS",
-                  "Provider": "S3",
-                  "Version": "1",
-                },
-                "Configuration": {
-                  "BucketName": {
-                    "Ref": "TestDeployBucket598113DD",
-                  },
-                  "Extract": "true",
-                },
-                "InputArtifacts": [
-                  {
-                    "Name": "BuildOutput",
-                  },
-                ],
-                "Name": "Deploy",
-                "RoleArn": {
-                  "Fn::GetAtt": [
-                    "TestPipelineDeployCodePipelineActionRole165722EB",
-                    "Arn",
-                  ],
-                },
-                "RunOrder": 1,
-              },
-            ],
-            "Name": "Deploy",
-          },
-        ],
-      },
-      "Type": "AWS::CodePipeline::Pipeline",
-    },
-    "TestPipelineArtifactsBucketC6926372": {
-      "DeletionPolicy": "Retain",
-      "Properties": {
-        "BucketEncryption": {
-          "ServerSideEncryptionConfiguration": [
-            {
-              "ServerSideEncryptionByDefault": {
-                "KMSMasterKeyID": {
-                  "Fn::GetAtt": [
-                    "TestPipelineArtifactsBucketEncryptionKeyD9CD82AE",
-                    "Arn",
-                  ],
-                },
-                "SSEAlgorithm": "aws:kms",
-              },
-            },
-          ],
-        },
-        "PublicAccessBlockConfiguration": {
-          "BlockPublicAcls": true,
-          "BlockPublicPolicy": true,
-          "IgnorePublicAcls": true,
-          "RestrictPublicBuckets": true,
-        },
-      },
-      "Type": "AWS::S3::Bucket",
-      "UpdateReplacePolicy": "Retain",
-    },
-    "TestPipelineArtifactsBucketEncryptionKeyAlias45F030EF": {
-      "DeletionPolicy": "Delete",
-      "Properties": {
-        "AliasName": "alias/codepipeline-teststacktestpipeline9e1085fc",
-        "TargetKeyId": {
-          "Fn::GetAtt": [
-            "TestPipelineArtifactsBucketEncryptionKeyD9CD82AE",
-            "Arn",
-          ],
-        },
-      },
-      "Type": "AWS::KMS::Alias",
-      "UpdateReplacePolicy": "Delete",
-    },
-    "TestPipelineArtifactsBucketEncryptionKeyD9CD82AE": {
-      "DeletionPolicy": "Delete",
-      "Properties": {
-        "KeyPolicy": {
-          "Statement": [
-            {
-              "Action": "kms:*",
-              "Effect": "Allow",
-              "Principal": {
-                "AWS": {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:",
-                      {
-                        "Ref": "AWS::Partition",
-                      },
-                      ":iam::",
-                      {
-                        "Ref": "AWS::AccountId",
-                      },
-                      ":root",
-                    ],
-                  ],
-                },
-              },
-              "Resource": "*",
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-      },
-      "Type": "AWS::KMS::Key",
-      "UpdateReplacePolicy": "Delete",
-    },
-    "TestPipelineArtifactsBucketPolicy8C7094B2": {
-      "Properties": {
-        "Bucket": {
-          "Ref": "TestPipelineArtifactsBucketC6926372",
-        },
-        "PolicyDocument": {
-          "Statement": [
-            {
-              "Action": "s3:*",
-              "Condition": {
-                "Bool": {
-                  "aws:SecureTransport": "false",
-                },
-              },
-              "Effect": "Deny",
-              "Principal": {
-                "AWS": "*",
-              },
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "TestPipelineArtifactsBucketC6926372",
-                    "Arn",
-                  ],
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      {
-                        "Fn::GetAtt": [
-                          "TestPipelineArtifactsBucketC6926372",
-                          "Arn",
-                        ],
-                      },
-                      "/*",
-                    ],
-                  ],
-                },
-              ],
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-      },
-      "Type": "AWS::S3::BucketPolicy",
-    },
-    "TestPipelineBuildCodePipelineActionRoleAA8222B3": {
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Statement": [
-            {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Principal": {
-                "AWS": {
-                  "Fn::GetAtt": [
-                    "TestPipelineRole612B87A5",
-                    "Arn",
-                  ],
-                },
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-      },
-      "Type": "AWS::IAM::Role",
-    },
-    "TestPipelineBuildCodePipelineActionRoleDefaultPolicy4A09011F": {
-      "Properties": {
-        "PolicyDocument": {
-          "Statement": [
-            {
-              "Action": [
-                "codebuild:BatchGetBuilds",
-                "codebuild:StartBuild",
-                "codebuild:StopBuild",
-              ],
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::GetAtt": [
-                  "TestBuildProject200EB7F7",
-                  "Arn",
-                ],
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "PolicyName": "TestPipelineBuildCodePipelineActionRoleDefaultPolicy4A09011F",
-        "Roles": [
-          {
-            "Ref": "TestPipelineBuildCodePipelineActionRoleAA8222B3",
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Policy",
-    },
-    "TestPipelineDeployCodePipelineActionRole165722EB": {
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Statement": [
-            {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Principal": {
-                "AWS": {
-                  "Fn::GetAtt": [
-                    "TestPipelineRole612B87A5",
-                    "Arn",
-                  ],
-                },
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-      },
-      "Type": "AWS::IAM::Role",
-    },
-    "TestPipelineDeployCodePipelineActionRoleDefaultPolicy06E232B6": {
-      "Properties": {
-        "PolicyDocument": {
-          "Statement": [
-            {
-              "Action": [
-                "s3:DeleteObject*",
-                "s3:PutObject",
-                "s3:PutObjectLegalHold",
-                "s3:PutObjectRetention",
-                "s3:PutObjectTagging",
-                "s3:PutObjectVersionTagging",
-                "s3:Abort*",
-              ],
-              "Effect": "Allow",
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "TestDeployBucket598113DD",
-                    "Arn",
-                  ],
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      {
-                        "Fn::GetAtt": [
-                          "TestDeployBucket598113DD",
-                          "Arn",
-                        ],
-                      },
-                      "/*",
-                    ],
-                  ],
-                },
-              ],
-            },
-            {
-              "Action": [
-                "s3:GetObject*",
-                "s3:GetBucket*",
-                "s3:List*",
-              ],
-              "Effect": "Allow",
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "TestPipelineArtifactsBucketC6926372",
-                    "Arn",
-                  ],
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      {
-                        "Fn::GetAtt": [
-                          "TestPipelineArtifactsBucketC6926372",
-                          "Arn",
-                        ],
-                      },
-                      "/*",
-                    ],
-                  ],
-                },
-              ],
-            },
-            {
-              "Action": [
-                "kms:Decrypt",
-                "kms:DescribeKey",
-              ],
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::GetAtt": [
-                  "TestPipelineArtifactsBucketEncryptionKeyD9CD82AE",
-                  "Arn",
-                ],
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "PolicyName": "TestPipelineDeployCodePipelineActionRoleDefaultPolicy06E232B6",
-        "Roles": [
-          {
-            "Ref": "TestPipelineDeployCodePipelineActionRole165722EB",
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Policy",
-    },
-    "TestPipelineRole612B87A5": {
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Statement": [
-            {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Principal": {
-                "Service": "codepipeline.amazonaws.com",
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-      },
-      "Type": "AWS::IAM::Role",
-    },
-    "TestPipelineRoleDefaultPolicy5A6143C8": {
-      "Properties": {
-        "PolicyDocument": {
-          "Statement": [
-            {
-              "Action": [
-                "s3:GetObject*",
-                "s3:GetBucket*",
-                "s3:List*",
-                "s3:DeleteObject*",
-                "s3:PutObject",
-                "s3:PutObjectLegalHold",
-                "s3:PutObjectRetention",
-                "s3:PutObjectTagging",
-                "s3:PutObjectVersionTagging",
-                "s3:Abort*",
-              ],
-              "Effect": "Allow",
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "TestPipelineArtifactsBucketC6926372",
-                    "Arn",
-                  ],
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      {
-                        "Fn::GetAtt": [
-                          "TestPipelineArtifactsBucketC6926372",
-                          "Arn",
-                        ],
-                      },
-                      "/*",
-                    ],
-                  ],
-                },
-              ],
-            },
-            {
-              "Action": [
-                "kms:Decrypt",
-                "kms:DescribeKey",
-                "kms:Encrypt",
-                "kms:ReEncrypt*",
-                "kms:GenerateDataKey*",
-              ],
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::GetAtt": [
-                  "TestPipelineArtifactsBucketEncryptionKeyD9CD82AE",
-                  "Arn",
-                ],
-              },
-            },
-            {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::GetAtt": [
-                  "TestPipelineBuildCodePipelineActionRoleAA8222B3",
-                  "Arn",
-                ],
-              },
-            },
-            {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::GetAtt": [
-                  "TestPipelineDeployCodePipelineActionRole165722EB",
-                  "Arn",
-                ],
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "PolicyName": "TestPipelineRoleDefaultPolicy5A6143C8",
-        "Roles": [
-          {
-            "Ref": "TestPipelineRole612B87A5",
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Policy",
-    },
-    "TestPipelineSourceWebhookResource00005D08": {
-      "Properties": {
-        "Authentication": "GITHUB_HMAC",
-        "AuthenticationConfiguration": {
-          "SecretToken": "{{resolve:secretsmanager:github-token:SecretString:::}}",
-        },
-        "Filters": [
-          {
-            "JsonPath": "$.ref",
-            "MatchEquals": "refs/heads/{Branch}",
-          },
-        ],
-        "RegisterWithThirdParty": true,
-        "TargetAction": "Source",
-        "TargetPipeline": {
-          "Ref": "TestPipeline6B875B6B",
-        },
-        "TargetPipelineVersion": 1,
-      },
-      "Type": "AWS::CodePipeline::Webhook",
-    },
-  },
-  "Rules": {
-    "CheckBootstrapVersion": {
-      "Assertions": [
-        {
-          "Assert": {
-            "Fn::Not": [
-              {
-                "Fn::Contains": [
-                  [
-                    "1",
-                    "2",
-                    "3",
-                    "4",
-                    "5",
-                  ],
-                  {
-                    "Ref": "BootstrapVersion",
-                  },
-                ],
-              },
-            ],
-          },
-          "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI.",
-        },
-      ],
-    },
-  },
-}
-`;
-
-exports[`Pipeline Construct Webhook Configuration should configure webhook Lambda with correct environment variables 1`] = `
-{
-  "TestPipelineWebhookHandler3547E834": {
-    "DependsOn": [
-      "TestPipelineWebhookHandlerServiceRole4EDBE532",
-    ],
-    "Properties": {
-      "Code": {
-        "S3Bucket": {
-          "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
-        },
-        "S3Key": "c78032609fe279de6ec4877ffd97a2f32f67657469244a4a3949cde00efc4826.zip",
-      },
-      "Description": "Lambda function to send notifications on pipeline state changes",
-      "Environment": {
-        "Variables": {
-          "PIPELINE_NAME": {
-            "Ref": "TestPipelineMyTestPipeline774AAAB3",
-          },
-          "WEBHOOK_URL": "https://my-webhook.example.com/pipeline-notifications",
-        },
-      },
-      "Handler": "src.main.handler",
-      "MemorySize": 128,
-      "Role": {
-        "Fn::GetAtt": [
-          "TestPipelineWebhookHandlerServiceRole4EDBE532",
-          "Arn",
-        ],
-      },
-      "Runtime": "python3.10",
-      "Timeout": 30,
-    },
-    "Type": "AWS::Lambda::Function",
-  },
-}
-`;
-
-exports[`Pipeline Construct Webhook Configuration should create unique Lambda function for each pipeline 1`] = `
-{
-  "TestPipeline1PipelineStateChangeA18DB6AF": {
-    "Properties": {
-      "Description": "Lambda function to handle pipeline state changes",
-      "EventPattern": {
-        "detail-type": [
-          "CodePipeline Pipeline Execution State Change",
-        ],
-        "resources": [
-          {
-            "Fn::Join": [
-              "",
-              [
-                "arn:",
-                {
-                  "Ref": "AWS::Partition",
-                },
-                ":codepipeline:",
-                {
-                  "Ref": "AWS::Region",
-                },
-                ":",
-                {
-                  "Ref": "AWS::AccountId",
-                },
-                ":",
-                {
-                  "Ref": "TestPipeline1727181BF",
-                },
-              ],
-            ],
-          },
-        ],
-        "source": [
-          "aws.codepipeline",
-        ],
-      },
-      "State": "ENABLED",
-      "Targets": [
-        {
-          "Arn": {
-            "Fn::GetAtt": [
-              "TestPipeline1WebhookHandler165ECA72",
-              "Arn",
-            ],
-          },
-          "Id": "Target0",
-        },
-      ],
-    },
-    "Type": "AWS::Events::Rule",
-  },
-  "TestPipeline2PipelineStateChange2046FE3E": {
-    "Properties": {
-      "Description": "Lambda function to handle pipeline state changes",
-      "EventPattern": {
-        "detail-type": [
-          "CodePipeline Pipeline Execution State Change",
-        ],
-        "resources": [
-          {
-            "Fn::Join": [
-              "",
-              [
-                "arn:",
-                {
-                  "Ref": "AWS::Partition",
-                },
-                ":codepipeline:",
-                {
-                  "Ref": "AWS::Region",
-                },
-                ":",
-                {
-                  "Ref": "AWS::AccountId",
-                },
-                ":",
-                {
-                  "Ref": "TestPipeline292D078EF",
-                },
-              ],
-            ],
-          },
-        ],
-        "source": [
-          "aws.codepipeline",
-        ],
-      },
-      "State": "ENABLED",
-      "Targets": [
-        {
-          "Arn": {
-            "Fn::GetAtt": [
-              "TestPipeline2WebhookHandler0BE1112B",
-              "Arn",
-            ],
-          },
-          "Id": "Target0",
-        },
-      ],
-    },
-    "Type": "AWS::Events::Rule",
   },
 }
 `;
